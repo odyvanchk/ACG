@@ -1,4 +1,6 @@
-package com.example.acg_labs.utils;
+package com.example.acg_labs.util;
+
+import com.example.acg_labs.entity.InfoComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +16,10 @@ public class ListUtils {
         System.out.println();
     }
 
-    public static void printFacesList(ArrayList<ArrayList<ArrayList<Integer>>> faces) {
+    public static void printFacesList(ArrayList<ArrayList<InfoComponent>> faces) {
         for (var faceGroup: faces) {
             for (var face : faceGroup) {
-                for (var coordinate : face) {
+                for (var coordinate: face.getChildren()) {
                     System.out.print(coordinate + "/");
                 }
                 System.out.print(" ");
