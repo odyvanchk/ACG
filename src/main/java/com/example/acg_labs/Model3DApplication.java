@@ -3,6 +3,7 @@ package com.example.acg_labs;
 import com.example.acg_labs.parser.impl.FaceParser;
 import com.example.acg_labs.parser.ObjParser;
 import com.example.acg_labs.parser.impl.VertexParser;
+import com.example.acg_labs.transformator.CoordinateTransformation;
 import com.example.acg_labs.util.ListUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -26,12 +27,37 @@ public class Model3DApplication extends Application {
         var vertexes = VertexParser.getInstance().parse("src/main/resources/models/model.obj", ObjParser.VERTEX);
 //        var textureVertexes = FaceParser.getVertexValues("src/main/resources/models/model.obj", ObjParser.TEXTURE_VERTEX);
 //        var normalVectors = FaceParser.getVertexValues("src/main/resources/models/model.obj", ObjParser.NORMAL_VECTOR);
-        var faces = FaceParser.getInstance().parse("src/main/resources/models/model.obj", ObjParser.FACE);
+//        var faces = FaceParser.getInstance().parse("src/main/resources/models/model.obj", ObjParser.FACE);
 
-        ListUtils.printList(Collections.singletonList(vertexes));
+        Double[] vector = new Double[4];
+        int i = 0;
+        for (var coordinate: vertexes.get(0)) {
+            vector[i] = Double.parseDouble(String.valueOf(coordinate));
+            i++;
+        }
+        vector[3] = 1.0;
+        printVector(vector);
+        var coordTrans = CoordinateTransformation.getInstance();
+        var world = coordTrans.fromModelToWorld(vector);
+        printVector(world);
+        var camera = coordTrans.fromWorldToCamera(world);
+        printVector(camera);
+        var projection = coordTrans.fromCameraToProjection(camera);
+        printVector(projection);
+        var viewport = coordTrans.fromProjectionToViewport(projection);
+        printVector(viewport);
+
+//        ListUtils.printList(Collections.singletonList(vertexes));
 //        ListUtils.printList(Collections.singletonList(textureVertexes));
 //        ListUtils.printList(Collections.singletonList(normalVectors));
-        ListUtils.printFacesList(faces);
+//        ListUtils.printFacesList(faces);
         launch();
+    }
+
+    private static void printVector(Double[] vector) {
+        for (var coordinate: vector) {
+            System.out.print(coordinate + " ");
+        }
+        System.out.println();
     }
 }
