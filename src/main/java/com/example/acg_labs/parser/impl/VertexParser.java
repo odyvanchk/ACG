@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class VertexParser implements ObjParser {
     private static final VertexParser INSTANCE = new VertexParser();
@@ -18,8 +19,8 @@ public class VertexParser implements ObjParser {
         return INSTANCE;
     }
     @Override
-    public ArrayList<ArrayList<InfoComponent>> parse(String path, String type) throws IOException {
-            var res = new ArrayList<ArrayList<InfoComponent>>();
+    public List<List<InfoComponent>> parse(String path, String type) throws IOException {
+            List<List<InfoComponent>> res = new ArrayList<>();
 
             try (BufferedReader br = new BufferedReader(new FileReader(path))) {
                 String line;

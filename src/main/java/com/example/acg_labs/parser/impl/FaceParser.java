@@ -6,6 +6,7 @@ import com.example.acg_labs.parser.ObjParser;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FaceParser implements ObjParser {
     private static final FaceParser INSTANCE = new FaceParser();
@@ -17,8 +18,8 @@ public class FaceParser implements ObjParser {
     }
 
     @Override
-    public ArrayList<ArrayList<InfoComponent>> parse(String path, String type) throws IOException {
-        var res = new ArrayList<ArrayList<InfoComponent>>();
+    public List<List<InfoComponent>> parse(String path, String type) throws IOException {
+        List<List<InfoComponent>> res = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;

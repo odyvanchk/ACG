@@ -1,39 +1,45 @@
 package com.example.acg_labs;
 
+import com.example.acg_labs.controller.TransformService;
+import com.example.acg_labs.controller.impl.TransformVertexService;
+import com.example.acg_labs.drawer.Object3DDrawer;
+import com.example.acg_labs.model.Model3D;
+import com.example.acg_labs.util.ListUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Model3DController implements Initializable {
-    @FXML private Canvas img ;
+public class Model3DController implements Initializable{
+    @FXML private Canvas canvas;
+    Model3D model3D;
 
-    private GraphicsContext gc ;
+    public void onMouseDraggedOnCanvas(MouseEvent mouseEvent) {
+        PixelWriter px = canvas.getGraphicsContext2D().getPixelWriter();
+        px.setColor((int) mouseEvent.getSceneX(),(int) mouseEvent.getSceneY(), Color.BLUE);
 
-    @FXML private void drawCanvas(ActionEvent event) {
-        gc.setFill(Color.AQUA);
-        gc.fillRect(10,10,100,100);
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-//        gc = img.getGraphicsContext2D();
-//        gc.setFill(Color.BLACK);
-//        System.out.println("color set to black");
-//        gc.fillRect(50, 50, 100, 100);
-//        System.out.println("draw rectangle");
-    }
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            model3D = new Model3D("src/main/resources/models/model.obj");
+           // ListUtils.printList(model3D.getVertexes());
 
-    public void onMouseDraggedOnCanvas(MouseEvent mouseEvent) {
-        PixelWriter px = img.getGraphicsContext2D().getPixelWriter();
-        px.setColor((int) mouseEvent.getSceneX(),(int) mouseEvent.getSceneY(), Color.BLUE);
+            TransformService transformService = new TransformVertexService();
+            double[][] resultVertexes = transformService.fromModelToView(model3D.getVertexes());
+            Object3DDrawer drawer = new Object3DDrawer();
+            drawer.draw(model3D.getFaces(), resultVertexes, canvas.getGraphicsContext2D().getPixelWriter());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

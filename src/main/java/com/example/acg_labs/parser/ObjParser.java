@@ -4,6 +4,7 @@ import com.example.acg_labs.entity.InfoComponent;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface ObjParser {
 
@@ -13,6 +14,6 @@ public interface ObjParser {
     String FACE = "f";
 
 
-    ArrayList<ArrayList<InfoComponent>> parse(String path, String type) throws IOException;
+    List<List<InfoComponent>> parse(String path, String type) throws IOException;
     
 }

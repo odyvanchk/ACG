@@ -5,14 +5,14 @@ import com.example.acg_labs.util.VectorMultiplication;
 
 public class CoordinateTransformation {
     public static final CoordinateTransformation INSTANCE = new CoordinateTransformation();
-    private Double[] eye = {0.0, 0.0, -30.0, 0.0};
-    private Double[] up = {0.0, 1.0, 0.0, 1.0};
-    private Double zNear = 0.1;
-    private Double zFar = 100.0;
-    private Double width = 800.0;
-    private Double height = 600.0;
-    private Double xMin = 0.0;
-    private Double yMin = 0.0;
+    private double[] eye = {0.0, -10.0, 50.0, 0.0};
+    private double[] up = {0.0, 1.0, 0.0, 1.0};
+    private double zNear = 10.0;
+    private double zFar = 100.0;
+    private double width = 1000.0;
+    private double height = 800.0;
+    private double xMin = 0.0;
+    private double yMin = 0.0;
 
 
     private CoordinateTransformation() {
@@ -22,22 +22,22 @@ public class CoordinateTransformation {
         return INSTANCE;
     }
 
-    public Double[] fromModelToWorld(Double[] vector) {
-        Double[] res;
-        Double[][] matrix = {{1.0, 0.0, 0.0, 30.0},
-                            {0.0, 1.0, 0.0, 30.0},
-                            {0.0, 0.0, 1.0, 30.0},
+    public double[] fromModelToWorld(double[] vector) {
+        double[] res;
+        double[][] matrix = {{2, 0.0, 0.5, 0.0},
+                            {0.0, 2, 0.0, -10.0},
+                            {-0.5, 0.0, 2, -100.0},
                             {0.0, 0.0, 0.0, 1.0}};
         res = MatrixMultiplication.multiply(vector, matrix);
         return res;
     }
 
-    public Double[] fromWorldToCamera(Double[] vector) {
-        Double[] res;
-        Double[] zAxis = normalize(minusVectors(vector, eye));
-        Double[] xAxis = normalize(VectorMultiplication.multiply(up, zAxis));
-        Double[] yAxis = up;
-        Double[][] matrix = {{xAxis[0], xAxis[1], xAxis[2], -productScalarVectors(xAxis, eye)},
+    public double[] fromWorldToCamera(double[] vector) {
+        double[] res;
+        double[] zAxis = normalize(minusVectors(eye, new double[]{0, 0, -1, 0}));
+        double[] xAxis = normalize(VectorMultiplication.multiply(up, zAxis));
+        double[] yAxis = up;
+        double[][] matrix = {{xAxis[0], xAxis[1], xAxis[2], -productScalarVectors(xAxis, eye)},
                             {yAxis[0], yAxis[1], yAxis[2], -productScalarVectors(yAxis, eye)},
                             {zAxis[0], zAxis[1], zAxis[2], -productScalarVectors(zAxis, eye)},
                             {0.0, 0.0, 0.0, 1.0}};
@@ -45,9 +45,9 @@ public class CoordinateTransformation {
         return res;
     }
 
-    public Double[] fromCameraToProjection(Double[] vector) {
-        Double[] res;
-        Double[][] matrix = {{2.0 * zNear / width, 0.0, 0.0, 0.0},
+    public double[] fromCameraToProjection(double[] vector) {
+        double[] res;
+        double[][] matrix = {{2.0 * zNear / width, 0.0, 0.0, 0.0},
                             {0.0, 2.0 * zNear / height, 0.0, 0.0},
                             {0.0, 0.0, zFar / (zNear - zFar), zNear * zFar / (zNear - zFar)},
                             {0.0, 0.0, -1.0, 0.0}};
@@ -55,9 +55,9 @@ public class CoordinateTransformation {
         return res;
     }
 
-    public Double[] fromProjectionToViewport(Double[] vector) {
-        Double[] res;
-        Double[][] matrix = {{width / 2.0, 0.0, 0.0, xMin + width / 2.0},
+    public double[] fromProjectionToViewport(double[] vector) {
+        double[] res;
+        double[][] matrix = {{width / 2.0, 0.0, 0.0, xMin + width / 2.0},
                             {0.0, - height / 2.0, 0.0, yMin + height / 2.0},
                             {0.0, 0.0, 1.0, 0.0},
                             {0.0, 0.0, 0.0, 1.0}};
@@ -65,15 +65,15 @@ public class CoordinateTransformation {
         return res;
     }
 
-    private Double[] minusVectors(Double[] minuend, Double[] subtrahend) {
-        Double[] res = new Double[4];
+    private double[] minusVectors(double[] minuend, double[] subtrahend) {
+        double[] res = new double[4];
         for (int i = 0; i < minuend.length; i++) {
             res[i] = minuend[i] - subtrahend[i];
         }
         return res;
     }
 
-    private Double[] normalize(Double[] vector) {
+    private double[] normalize(double[] vector) {
         double normal = 0.0;
         for (int i = 0; i < vector.length - 1; i++) {
             normal += Math.pow(vector[i], 2.0);
@@ -85,8 +85,8 @@ public class CoordinateTransformation {
         return vector;
     }
 
-    private Double productScalarVectors(Double[] vector1, Double[] vector2) {
-        Double res = 0.0;
+    private double productScalarVectors(double[] vector1, double[] vector2) {
+        double res = 0.0;
         for (int i = 0; i < vector1.length - 1; i++) {
             res += vector1[i] * vector2[i];
         }
