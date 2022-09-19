@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.acg_labs/com.example.acg_labs.HelloApplication</mainClass>
+                            <mainClass>com.example.acg_labs/com.example.acg_labs.Model3DApplication</mainClass>
                         </configuration>
                     </execution>
                 </executions>
