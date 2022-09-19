@@ -1,8 +1,5 @@
 package com.example.acg_labs.util;
 
-import com.example.acg_labs.entity.InfoComponent;
-
-
 public class MatrixMultiplication {
 
     private MatrixMultiplication() {
@@ -16,6 +13,7 @@ public class MatrixMultiplication {
             }
             res[i] += matrix[i][matrix.length];
         }
+        res[3] = vector[3] * matrix[3][3];
         return res;
     }
 }
