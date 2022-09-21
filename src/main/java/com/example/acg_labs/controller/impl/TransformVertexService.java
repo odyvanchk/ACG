@@ -6,8 +6,6 @@ import com.example.acg_labs.transformator.CoordinateTransformation;
 
 import java.util.List;
 
-import static com.example.acg_labs.Model3DApplication.printVector;
-
 public class TransformVertexService implements TransformService {
 
     @Override
@@ -22,7 +20,6 @@ public class TransformVertexService implements TransformService {
             var camera = coordTrans.fromWorldToCamera(world);
             var projection = coordTrans.fromCameraToProjection(camera);
             var viewport = coordTrans.fromProjectionToViewport(projection);
-           // printVector(viewport);
 
             res[i++] = viewport;
         }

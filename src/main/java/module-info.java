@@ -5,8 +5,6 @@ module com.example.acg_labs {
 
     opens com.example.acg_labs to javafx.fxml;
     exports com.example.acg_labs;
-    exports com.example.acg_labs.util;
-    opens com.example.acg_labs.util to javafx.fxml;
     exports com.example.acg_labs.entity;
     opens com.example.acg_labs.entity to javafx.fxml;
     exports com.example.acg_labs.entity.impl;

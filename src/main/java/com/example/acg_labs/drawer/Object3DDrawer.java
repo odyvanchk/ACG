@@ -10,23 +10,7 @@ import java.util.List;
 public class Object3DDrawer {
 
     public void draw(List<List<InfoComponent>> faces, double[][] vertexes, PixelWriter px) {
-        int k =0;
-//        System.out.println(vertexes.length);
-//        for (int i = 0; i < vertexes.length; i++) {
-//            px.setColor((int)vertexes[i][0], (int)vertexes[i][1], Color.BLUE);
-//        }
-int f = 0;
-        System.out.println(Arrays.toString(vertexes[683]));
-        System.out.println(Arrays.toString(vertexes[685]));
-        System.out.println(Arrays.toString(vertexes[660]));
         for (var face: faces) {
-            f++;
-            System.out.println(f);
-            if (f == 956) {
-                f = 0;
-                System.out.println(face.get(0).getChildren().get(0) + " " + face.get(1).getChildren().get(0) + " " + face.get(2).getChildren().get(0));
-            }
-
             int first = (int)face.get(0).getChildren().get(0);
             int last = (int)face.get(face.size() - 1).getChildren().get(0);
             for (int i = 0; i < face.size() - 1; i++) {

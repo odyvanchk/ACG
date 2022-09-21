@@ -1,11 +1,5 @@
 package com.example.acg_labs;
 
-import com.example.acg_labs.model.Model3D;
-import com.example.acg_labs.parser.impl.FaceParser;
-import com.example.acg_labs.parser.ObjParser;
-import com.example.acg_labs.parser.impl.VertexParser;
-import com.example.acg_labs.transformator.CoordinateTransformation;
-import com.example.acg_labs.util.ListUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -26,12 +20,5 @@ public class Model3DApplication extends Application {
 
     public static void main(String[] args) throws IOException {
         launch();
-    }
-
-    public static void printVector(double[] vector) {
-        for (var coordinate: vector) {
-            System.out.print(coordinate + " ");
-        }
-        System.out.println();
     }
 }

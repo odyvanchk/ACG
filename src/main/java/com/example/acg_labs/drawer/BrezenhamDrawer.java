@@ -40,8 +40,7 @@ public class BrezenhamDrawer {
             {
                 do {
                     f += A * signa;
-                    if (f > 0)
-                    {
+                    if (f > 0) {
                         f -= B * signb;
                         y += signa;
                     }
@@ -59,7 +58,7 @@ public class BrezenhamDrawer {
                     }
                     y += signa;
                     px.setColor(x, y, Color.BLUE);
-                } while (x != x1 || y != y1);
+                } while ((x != x1 || y != y1) && !(x0 == x1 && y0 == y1));
             }
     }
 }

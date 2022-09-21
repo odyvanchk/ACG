@@ -4,12 +4,9 @@ import com.example.acg_labs.controller.TransformService;
 import com.example.acg_labs.controller.impl.TransformVertexService;
 import com.example.acg_labs.drawer.Object3DDrawer;
 import com.example.acg_labs.model.Model3D;
-import com.example.acg_labs.util.ListUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -32,7 +29,6 @@ public class Model3DController implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             model3D = new Model3D("src/main/resources/models/model.obj");
-           // ListUtils.printList(model3D.getVertexes());
 
             TransformService transformService = new TransformVertexService();
             double[][] resultVertexes = transformService.fromModelToView(model3D.getVertexes());
