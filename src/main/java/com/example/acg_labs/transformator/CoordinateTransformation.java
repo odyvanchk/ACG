@@ -1,16 +1,18 @@
 package com.example.acg_labs.transformator;
 
 import com.example.acg_labs.math.Calculation;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 public class CoordinateTransformation {
     private static final CoordinateTransformation INSTANCE = new CoordinateTransformation();
     private Calculation calculator = Calculation.getInstance();
     private double[] eye = {0.0, 0.0, 0.0, 0.0};
     private double[] target = {0.0, 0.0, -1.0, 0.0};
-    private double[] up = {0.0, 1.0, 0.0, 1.0};
-    private double zNear = 10.0;
+    private double[] up = {0.0, 1.0, 0.0, 0.0};
+    private double zNear = 1.0;
     private double zFar = 100.0;
-    private double width = 1000.0;
+    private double width = 1300.0;
     private double height = 800.0;
     private double xMin = 0.0;
     private double yMin = 0.0;
@@ -25,9 +27,9 @@ public class CoordinateTransformation {
 
     public double[] fromModelToWorld(double[] vector) {
         double[] res;
-        double[][] matrix = {{2, 0.0, 0.0, 0.0},
-                            {0.0, 2, 0.0, -10.0},
-                            {0.0, 0.0, 2, -100.0},
+        double[][] matrix = {{20, 0.0, 0.0, 0.0},
+                            {0.0, 20, 0.0, -30.0},
+                            {0.0, 0.0, 20, 0.0},
                             {0.0, 0.0, 0.0, 1.0}};
         res = calculator.matrixVectorProduct(matrix, vector);
         return res;
@@ -63,6 +65,34 @@ public class CoordinateTransformation {
                             {0.0, 0.0, 1.0, 0.0},
                             {0.0, 0.0, 0.0, 1.0}};
         res = calculator.matrixVectorProduct(matrix, vector);
+        return res;
+    }
+
+    public double[] translateCoordinate(double[] vector, KeyEvent keyEvent) {
+        double[] res = vector;
+        double translation = 10.0;
+        double[][] matrix = {{1.0, 0.0, 0.0, 0.0},
+                            {0.0, 1.0, 0.0, 0.0},
+                            {0.0, 0.0, 1.0, 0.0},
+                            {0.0, 0.0, 0.0, 1.0}};
+        switch (keyEvent.getCode()) {
+            case UP -> {
+                matrix[1][3] = -translation;
+                res = calculator.matrixVectorProduct(matrix, vector);
+            }
+            case DOWN -> {
+                matrix[1][3] = translation;
+                res = calculator.matrixVectorProduct(matrix, vector);
+            }
+            case LEFT -> {
+                matrix[0][3] = -translation;
+                res = calculator.matrixVectorProduct(matrix, vector);
+            }
+            case RIGHT -> {
+                matrix[0][3] = translation;
+                res = calculator.matrixVectorProduct(matrix, vector);
+            }
+        }
         return res;
     }
 }

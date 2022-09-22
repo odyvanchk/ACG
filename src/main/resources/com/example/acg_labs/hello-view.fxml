@@ -11,5 +11,7 @@
 <!--    <padding>-->
 <!--        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>-->
 <!--    </padding>-->
-        <Canvas fx:id="canvas" height="800.0" width="1000.0" onMouseDragged="#onMouseDraggedOnCanvas" />
+        <Canvas fx:id="canvas" height="800.0" width="1300.0"
+                onMouseDragged="#onMouseDraggedOnCanvas"
+                onKeyPressed="#onKeyPressedOnCanvas"/>
 </VBox>

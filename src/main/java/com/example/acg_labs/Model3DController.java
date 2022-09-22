@@ -7,7 +7,10 @@ import com.example.acg_labs.model.Model3D;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
@@ -17,7 +20,10 @@ import java.util.ResourceBundle;
 
 public class Model3DController implements Initializable{
     @FXML private Canvas canvas;
-    Model3D model3D;
+    private Model3D model3D;
+    private Object3DDrawer drawer = new Object3DDrawer();
+    private TransformService transformService = new TransformVertexService();
+    private boolean isMousePressed = false;
 
     public void onMouseDraggedOnCanvas(MouseEvent mouseEvent) {
         PixelWriter px = canvas.getGraphicsContext2D().getPixelWriter();
@@ -25,14 +31,22 @@ public class Model3DController implements Initializable{
 
     }
 
+    public void onKeyPressedOnCanvas(KeyEvent keyEvent) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        double[][] resultVertexes = transformService.translateModel(model3D.getVertexesD(), keyEvent);
+        model3D.updateVertexesD(resultVertexes);
+        drawer.draw(model3D.getFaces(), resultVertexes, canvas.getGraphicsContext2D().getPixelWriter());
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
+            canvas.setFocusTraversable(true);
             model3D = new Model3D("src/main/resources/models/model.obj");
 
-            TransformService transformService = new TransformVertexService();
             double[][] resultVertexes = transformService.fromModelToView(model3D.getVertexes());
-            Object3DDrawer drawer = new Object3DDrawer();
+            model3D.updateVertexesD(resultVertexes);
             drawer.draw(model3D.getFaces(), resultVertexes, canvas.getGraphicsContext2D().getPixelWriter());
         } catch (IOException e) {
             e.printStackTrace();

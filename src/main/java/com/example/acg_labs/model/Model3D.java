@@ -10,10 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Model3D {
-    private final List<List<InfoComponent>> vertexes;
+    private List<List<InfoComponent>> vertexes;
+
+    private double[][] vertexesD;
 
     public List<List<InfoComponent>> getVertexes() {
         return vertexes;
+    }
+
+    public double[][] getVertexesD() {
+        return vertexesD;
     }
 
     public List<List<InfoComponent>> getFaces() {
@@ -25,5 +31,9 @@ public class Model3D {
     public Model3D(String path) throws IOException {
         faces = FaceParser.getInstance().parse(path, ObjParser.FACE);
         vertexes = VertexParser.getInstance().parse(path, ObjParser.VERTEX);
+    }
+
+    public void updateVertexesD(double[][] newVertexesD) {
+        vertexesD = newVertexesD;
     }
 }
