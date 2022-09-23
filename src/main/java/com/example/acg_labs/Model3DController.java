@@ -23,12 +23,23 @@ public class Model3DController implements Initializable{
     private Model3D model3D;
     private Object3DDrawer drawer = new Object3DDrawer();
     private TransformService transformService = new TransformVertexService();
-    private boolean isMousePressed = false;
+    private double oldX;
+    private double oldY;
 
     public void onMouseDraggedOnCanvas(MouseEvent mouseEvent) {
-        PixelWriter px = canvas.getGraphicsContext2D().getPixelWriter();
-        px.setColor((int) mouseEvent.getSceneX(),(int) mouseEvent.getSceneY(), Color.BLUE);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        double[][] resultVertexes = transformService.rotateModel(model3D.getVertexesD(),
+                mouseEvent.getSceneX() - oldX, mouseEvent.getSceneY() - oldY);
+        oldX = mouseEvent.getSceneX();
+        oldY = mouseEvent.getSceneY();
+        model3D.updateVertexesD(resultVertexes);
+        drawer.draw(model3D.getFaces(), resultVertexes, canvas.getGraphicsContext2D().getPixelWriter());
+    }
 
+    public void onMousePressedOnCanvas(MouseEvent mouseEvent) {
+        oldX = mouseEvent.getSceneX();
+        oldY = mouseEvent.getSceneY();
     }
 
     public void onKeyPressedOnCanvas(KeyEvent keyEvent) {

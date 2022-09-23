@@ -13,5 +13,6 @@
 <!--    </padding>-->
         <Canvas fx:id="canvas" height="800.0" width="1300.0"
                 onMouseDragged="#onMouseDraggedOnCanvas"
+                onMousePressed="#onMousePressedOnCanvas"
                 onKeyPressed="#onKeyPressedOnCanvas"/>
 </VBox>

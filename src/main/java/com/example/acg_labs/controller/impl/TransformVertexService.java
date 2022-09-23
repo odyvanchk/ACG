@@ -6,6 +6,7 @@ import com.example.acg_labs.math.Calculation;
 import com.example.acg_labs.transformator.CoordinateTransformation;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 import java.util.List;
 
@@ -36,6 +37,17 @@ public class TransformVertexService implements TransformService {
         for (var vertex: vertexes ) {
             var trans = coordTrans.translateCoordinate(vertex, keyEvent);
             res[i++] = trans;
+        }
+        return res;
+    }
+
+    @Override
+    public double[][] rotateModel(double[][] vertexes, double transX, double transY) {
+        double [][] res = new double[vertexes.length][4];
+        int i = 0;
+        for (var vertex: vertexes ) {
+            var rotation = coordTrans.rotateCoordinate(vertex, transX, transY);
+            res[i++] = rotation;
         }
         return res;
     }

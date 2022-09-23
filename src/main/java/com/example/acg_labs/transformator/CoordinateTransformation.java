@@ -31,7 +31,8 @@ public class CoordinateTransformation {
                             {0.0, 20, 0.0, -30.0},
                             {0.0, 0.0, 20, 0.0},
                             {0.0, 0.0, 0.0, 1.0}};
-        res = calculator.matrixVectorProduct(matrix, vector);
+        double[] temp = rotateCoordinate(vector, -40, 40);
+        res = calculator.matrixVectorProduct(matrix, temp);
         return res;
     }
 
@@ -77,19 +78,19 @@ public class CoordinateTransformation {
                             {0.0, 0.0, 0.0, 1.0}};
         switch (keyEvent.getCode()) {
             case UP -> {
-                matrix[1][3] = -translation;
-                res = calculator.matrixVectorProduct(matrix, vector);
-            }
-            case DOWN -> {
                 matrix[1][3] = translation;
                 res = calculator.matrixVectorProduct(matrix, vector);
             }
+            case DOWN -> {
+                matrix[1][3] = -translation;
+                res = calculator.matrixVectorProduct(matrix, vector);
+            }
             case LEFT -> {
-                matrix[0][3] = -translation;
+                matrix[0][3] = translation;
                 res = calculator.matrixVectorProduct(matrix, vector);
             }
             case RIGHT -> {
-                matrix[0][3] = translation;
+                matrix[0][3] = -translation;
                 res = calculator.matrixVectorProduct(matrix, vector);
             }
             case Q -> {
@@ -105,6 +106,24 @@ public class CoordinateTransformation {
                 res = calculator.matrixVectorProduct(matrix, vector);
             }
         }
+        return res;
+    }
+
+    public double[] rotateCoordinate(double[] vector, double transX, double transY) {
+        double[] res;
+        double coef = 0.005;
+        transX *= coef;
+        transY *= coef;
+        double[][] matrixX = {{1.0, 0.0, 0.0, 0.0},
+                             {0.0, Math.cos(transY), -Math.sin(transY), 0.0},
+                             {0.0, Math.sin(transY), Math.cos(transY), 0.0},
+                             {0.0, 0.0, 0.0, 1.0}};
+        double[][] matrixY = {{Math.cos(transX), 0.0, -Math.sin(transX), 0.0},
+                             {0.0, 1.0, 0.0, 0.0},
+                             {Math.sin(transX), 0.0, Math.cos(transX), 0.0},
+                             {0.0, 0.0, 0.0, 1.0}};
+        double[] temp = calculator.matrixVectorProduct(matrixY, vector);
+        res = calculator.matrixVectorProduct(matrixX, temp);
         return res;
     }
 }
