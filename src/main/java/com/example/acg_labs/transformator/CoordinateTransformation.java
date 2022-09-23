@@ -92,6 +92,18 @@ public class CoordinateTransformation {
                 matrix[0][3] = translation;
                 res = calculator.matrixVectorProduct(matrix, vector);
             }
+            case Q -> {
+                matrix[0][0] *= 0.9;
+                matrix[1][1] *= 0.9;
+                matrix[2][2] *= 0.9;
+                res = calculator.matrixVectorProduct(matrix, vector);
+            }
+            case W -> {
+                matrix[0][0] *= 1.1;
+                matrix[1][1] *= 1.1;
+                matrix[2][2] *= 1.1;
+                res = calculator.matrixVectorProduct(matrix, vector);
+            }
         }
         return res;
     }
