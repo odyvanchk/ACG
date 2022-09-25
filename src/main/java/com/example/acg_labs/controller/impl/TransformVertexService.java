@@ -12,9 +12,9 @@ public class TransformVertexService implements TransformService {
     public double[][] fromModelToView(double[][] vertexes) {
         var res = new double[vertexes.length][4];
         for (int i = 0; i < vertexes.length; i++) {
-            var trans = coordTrans.translateCoordinate(vertexes[i]);
-            var rotation = coordTrans.rotateCoordinate(trans);
-            var world = coordTrans.fromModelToWorld(rotation);
+            var rotation = coordTrans.rotateCoordinate(vertexes[i]);
+            var trans = coordTrans.translateCoordinate(rotation);
+            var world = coordTrans.fromModelToWorld(trans);
             var camera = coordTrans.fromWorldToCamera(world);
             var projection = coordTrans.fromCameraToProjection(camera);
             var viewport = coordTrans.fromProjectionToViewport(projection);
