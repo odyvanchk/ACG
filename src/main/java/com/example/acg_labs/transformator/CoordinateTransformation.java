@@ -3,8 +3,7 @@ package com.example.acg_labs.transformator;
 import com.example.acg_labs.math.Calculation;
 import javafx.scene.input.KeyEvent;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 public class CoordinateTransformation {
     private static final CoordinateTransformation INSTANCE = new CoordinateTransformation();
@@ -18,6 +17,13 @@ public class CoordinateTransformation {
     private double height = 800.0;
     private double xMin = 0.0;
     private double yMin = 0.0;
+    private static double angleX = -20.0;
+    private static double angleY = -15.0;
+    private static double distX = 0.0;
+    private static double distY = 0.0;
+    private static double scaleX = 1.0;
+    private static double scaleY = 1.0;
+    private static double scaleZ = 1.0;
 
 
     private CoordinateTransformation() {
@@ -70,68 +76,74 @@ public class CoordinateTransformation {
         return res;
     }
 
-    public double[] translateCoordinate(double[] vector, KeyEvent keyEvent) {
+    public void updateTranslateCoordinate(KeyEvent keyEvent) {
+        double translation = 0.3;
+        switch (keyEvent.getCode()) {
+            case UP -> {
+                distY -= translation;
+            }
+            case DOWN -> {
+                distY += translation;
+            }
+            case LEFT -> {
+                distX += translation;
+            }
+            case RIGHT -> {
+                distX -= translation;
+            }
+            case Q -> {
+                scaleX *= 0.9;
+                scaleY *= 0.9;
+                scaleZ *= 0.9;
+            }
+            case W -> {
+                scaleX *= 1.1;
+                scaleY *= 1.1;
+                scaleZ *= 1.1;
+            }
+        }
+    }
+
+    public double[] translateCoordinate(double[] vector) {
         double[] res = vector;
-        double translation = 0.05;
         double[][] matrix = {{1.0, 0.0, 0.0, 0.0},
                             {0.0, 1.0, 0.0, 0.0},
                             {0.0, 0.0, 1.0, 0.0},
                             {0.0, 0.0, 0.0, 1.0}};
-        switch (keyEvent.getCode()) {
-            case UP -> {
-                matrix[1][3] = translation;
-                res = calculator.matrixVectorProduct(matrix, vector);
-            }
-            case DOWN -> {
-                matrix[1][3] = -translation;
-                res = calculator.matrixVectorProduct(matrix, vector);
-            }
-            case LEFT -> {
-                matrix[0][3] = -translation;
-                res = calculator.matrixVectorProduct(matrix, vector);
-            }
-            case RIGHT -> {
-                matrix[0][3] = translation;
-                res = calculator.matrixVectorProduct(matrix, vector);
-            }
-            case Q -> {
-                matrix[0][0] *= 0.9;
-                matrix[1][1] *= 0.9;
-                matrix[2][2] *= 0.9;
-                res = calculator.matrixVectorProduct(matrix, vector);
-            }
-            case W -> {
-                matrix[0][0] *= 1.1;
-                matrix[1][1] *= 1.1;
-                matrix[2][2] *= 1.1;
-                res = calculator.matrixVectorProduct(matrix, vector);
-            }
-        }
+
+        matrix[0][3] = distX;
+        matrix[1][3] = distY;
+        matrix[0][0] = scaleX;
+        matrix[1][1] = scaleY;
+        matrix[2][2] = scaleZ;
+        res = calculator.matrixVectorProduct(matrix, vector);
         return res;
     }
 
-    public double[] rotateCoordinate(double[] vector, double transX, double transY) {
-        double[] res;
-        double coef = 0.01;
-        transX *= coef;
-        transY *= coef;
-        double[][] matrixX = {{1.0, 0.0,          0.0,         0.0},
-                              {0.0, cos(transY),  sin(transY), 0.0},
-                              {0.0, -sin(transY), cos(transY), 0.0},
-                              {0.0, 0.0,          0.0,         1.0}};
+    public void updateRotateCoordinate(double transX, double transY) {
+        angleX += transX;
+        angleY += transY;
+    }
 
-        double[][] matrixY = {{cos(transX), 0.0, -sin(transX), 0.0},
+    public double[] rotateCoordinate(double[] vector) {
+        double[] res;
+        double coef = 0.005;
+        double tempX = coef * angleX;
+        double tempY = coef * angleY;
+        double[][] matrixX = {{1.0, 0.0,          0.0,         0.0},
+                              {0.0, cos(tempY),  -sin(tempY), 0.0},
+                              {0.0, sin(tempY), cos(tempY), 0.0},
+                              {0.0, 0.0,          0.0,         1.0}};
+        double[][] matrixY = {{cos(tempX), 0.0, sin(tempX), 0.0},
                               {0.0,         1.0, 0.0,          0.0},
-                              {sin(transX), 0.0, cos(transX),  0.0},
+                              {-sin(tempX), 0.0, cos(tempX),  0.0},
                               {0.0,         0.0, 0.0,          1.0}};
 //        double[][] matrixZ = {{Math.cos(transZ), -Math.sin(transZ), 0.0, 0.0},
 //                             {Math.sin(transZ),   Math.cos(transZ), 0.0, 0.0},
 //                             {0.0,                0.0,              1.0, 0.0},
 //                             {0.0,                0.0,              0.0, 1.0}};
-
-        double[] temp = calculator.matrixVectorProduct(matrixY, vector);
-        //res = calculator.matrixVectorProduct(matrixY, temp);
-        res = calculator.matrixVectorProduct(matrixX, temp);
+        double[] temp = calculator.matrixVectorProduct(matrixX, vector);
+        res = calculator.matrixVectorProduct(matrixY, temp);
         return res;
     }
 }

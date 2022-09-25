@@ -12,7 +12,9 @@ public class TransformVertexService implements TransformService {
     public double[][] fromModelToView(double[][] vertexes) {
         var res = new double[vertexes.length][4];
         for (int i = 0; i < vertexes.length; i++) {
-            var world = coordTrans.fromModelToWorld(vertexes[i]);
+            var trans = coordTrans.translateCoordinate(vertexes[i]);
+            var rotation = coordTrans.rotateCoordinate(trans);
+            var world = coordTrans.fromModelToWorld(rotation);
             var camera = coordTrans.fromWorldToCamera(world);
             var projection = coordTrans.fromCameraToProjection(camera);
             var viewport = coordTrans.fromProjectionToViewport(projection);
@@ -24,28 +26,16 @@ public class TransformVertexService implements TransformService {
 
     @Override
     public double[][] translateModel(Model3D model3D, KeyEvent keyEvent) {
+        coordTrans.updateTranslateCoordinate(keyEvent);
         var vertexes = model3D.getVertexesD();
-        double[][] res = new double[vertexes.length][4];
-        int i = 0;
-        for (var vertex : vertexes) {
-            var trans = coordTrans.translateCoordinate(vertex, keyEvent);
-            res[i++] = trans;
-        }
-        model3D.updateVertexesD(res);
-        return fromModelToView(res);
+        return fromModelToView(vertexes);
     }
 
     @Override
     public double[][] rotateModel(Model3D model3D, double transX, double transY) {
+        coordTrans.updateRotateCoordinate(transX, transY);
         var vertexes = model3D.getVertexesD();
-        double[][] res = new double[vertexes.length][4];
-        int i = 0;
-        for (var vertex : vertexes) {
-            var rotation = coordTrans.rotateCoordinate(vertex, transX, transY);
-            res[i++] = rotation;
-        }
-        model3D.updateVertexesD(res);
-        return fromModelToView(res);
+        return fromModelToView(vertexes);
     }
 
 }
