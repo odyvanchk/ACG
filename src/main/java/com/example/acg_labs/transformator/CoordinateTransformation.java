@@ -1,8 +1,10 @@
 package com.example.acg_labs.transformator;
 
 import com.example.acg_labs.math.Calculation;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 public class CoordinateTransformation {
     private static final CoordinateTransformation INSTANCE = new CoordinateTransformation();
@@ -28,11 +30,10 @@ public class CoordinateTransformation {
     public double[] fromModelToWorld(double[] vector) {
         double[] res;
         double[][] matrix = {{20, 0.0, 0.0, 0.0},
-                            {0.0, 20, 0.0, -30.0},
+                            {0.0, 20, 0.0, 0.0},
                             {0.0, 0.0, 20, 0.0},
                             {0.0, 0.0, 0.0, 1.0}};
-        double[] temp = rotateCoordinate(vector, -40, 40);
-        res = calculator.matrixVectorProduct(matrix, temp);
+        res = calculator.matrixVectorProduct(matrix, vector);
         return res;
     }
 
@@ -42,36 +43,36 @@ public class CoordinateTransformation {
         double[] xAxis = calculator.normalizeVector(calculator.crossProduct(up, zAxis));
         double[] yAxis = up;
         double[][] matrix = {{xAxis[0], xAxis[1], xAxis[2], -calculator.dotProduct(xAxis, eye)},
-                            {yAxis[0], yAxis[1], yAxis[2], -calculator.dotProduct(yAxis, eye)},
-                            {zAxis[0], zAxis[1], zAxis[2], -calculator.dotProduct(zAxis, eye)},
-                            {0.0, 0.0, 0.0, 1.0}};
+                             {yAxis[0], yAxis[1], yAxis[2], -calculator.dotProduct(yAxis, eye)},
+                             {zAxis[0], zAxis[1], zAxis[2], -calculator.dotProduct(zAxis, eye)},
+                             {0.0,      0.0,      0.0,       1.0}};
         res = calculator.matrixVectorProduct(matrix, vector);
         return res;
     }
 
     public double[] fromCameraToProjection(double[] vector) {
         double[] res;
-        double[][] matrix = {{2.0 * zNear / width, 0.0, 0.0, 0.0},
-                            {0.0, 2.0 * zNear / height, 0.0, 0.0},
-                            {0.0, 0.0, zFar / (zNear - zFar), zNear * zFar / (zNear - zFar)},
-                            {0.0, 0.0, -1.0, 0.0}};
+        double[][] matrix = {{2.0 * zNear / width, 0.0,                  0.0,                   0.0},
+                             {0.0,                 2.0 * zNear / height, 0.0,                   0.0},
+                             {0.0,                 0.0,                  zFar / (zNear - zFar), zNear * zFar / (zNear - zFar)},
+                             {0.0,                 0.0,                  1.0,                   0.0}};
         res = calculator.matrixVectorProduct(matrix, vector);
         return res;
     }
 
     public double[] fromProjectionToViewport(double[] vector) {
         double[] res;
-        double[][] matrix = {{width / 2.0, 0.0, 0.0, xMin + width / 2.0},
-                            {0.0, - height / 2.0, 0.0, yMin + height / 2.0},
-                            {0.0, 0.0, 1.0, 0.0},
-                            {0.0, 0.0, 0.0, 1.0}};
+        double[][] matrix = {{width / 2.0, 0.0,            0.0, xMin + width / 2.0},
+                            {0.0,          - height / 2.0, 0.0, yMin + height / 2.0},
+                            {0.0,          0.0,            1.0, 0.0},
+                            {0.0,          0.0,            0.0, 1.0}};
         res = calculator.matrixVectorProduct(matrix, vector);
         return res;
     }
 
     public double[] translateCoordinate(double[] vector, KeyEvent keyEvent) {
         double[] res = vector;
-        double translation = 10.0;
+        double translation = 0.05;
         double[][] matrix = {{1.0, 0.0, 0.0, 0.0},
                             {0.0, 1.0, 0.0, 0.0},
                             {0.0, 0.0, 1.0, 0.0},
@@ -86,11 +87,11 @@ public class CoordinateTransformation {
                 res = calculator.matrixVectorProduct(matrix, vector);
             }
             case LEFT -> {
-                matrix[0][3] = translation;
+                matrix[0][3] = -translation;
                 res = calculator.matrixVectorProduct(matrix, vector);
             }
             case RIGHT -> {
-                matrix[0][3] = -translation;
+                matrix[0][3] = translation;
                 res = calculator.matrixVectorProduct(matrix, vector);
             }
             case Q -> {
@@ -111,18 +112,25 @@ public class CoordinateTransformation {
 
     public double[] rotateCoordinate(double[] vector, double transX, double transY) {
         double[] res;
-        double coef = 0.005;
+        double coef = 0.01;
         transX *= coef;
         transY *= coef;
-        double[][] matrixX = {{1.0, 0.0, 0.0, 0.0},
-                             {0.0, Math.cos(transY), -Math.sin(transY), 0.0},
-                             {0.0, Math.sin(transY), Math.cos(transY), 0.0},
-                             {0.0, 0.0, 0.0, 1.0}};
-        double[][] matrixY = {{Math.cos(transX), 0.0, -Math.sin(transX), 0.0},
-                             {0.0, 1.0, 0.0, 0.0},
-                             {Math.sin(transX), 0.0, Math.cos(transX), 0.0},
-                             {0.0, 0.0, 0.0, 1.0}};
+        double[][] matrixX = {{1.0, 0.0,          0.0,         0.0},
+                              {0.0, cos(transY),  sin(transY), 0.0},
+                              {0.0, -sin(transY), cos(transY), 0.0},
+                              {0.0, 0.0,          0.0,         1.0}};
+
+        double[][] matrixY = {{cos(transX), 0.0, -sin(transX), 0.0},
+                              {0.0,         1.0, 0.0,          0.0},
+                              {sin(transX), 0.0, cos(transX),  0.0},
+                              {0.0,         0.0, 0.0,          1.0}};
+//        double[][] matrixZ = {{Math.cos(transZ), -Math.sin(transZ), 0.0, 0.0},
+//                             {Math.sin(transZ),   Math.cos(transZ), 0.0, 0.0},
+//                             {0.0,                0.0,              1.0, 0.0},
+//                             {0.0,                0.0,              0.0, 1.0}};
+
         double[] temp = calculator.matrixVectorProduct(matrixY, vector);
+        //res = calculator.matrixVectorProduct(matrixY, temp);
         res = calculator.matrixVectorProduct(matrixX, temp);
         return res;
     }

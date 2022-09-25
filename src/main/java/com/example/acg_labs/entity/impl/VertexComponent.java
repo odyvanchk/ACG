@@ -3,7 +3,6 @@ package com.example.acg_labs.entity.impl;
 import com.example.acg_labs.entity.InfoComponent;
 
 import java.util.List;
-import java.util.Objects;
 
 public record VertexComponent(Double element) implements InfoComponent<Double> {
 

@@ -3,7 +3,6 @@ package com.example.acg_labs.parser;
 import com.example.acg_labs.entity.InfoComponent;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ObjParser {
@@ -15,5 +14,5 @@ public interface ObjParser {
 
 
     List<List<InfoComponent>> parse(String path, String type) throws IOException;
-    
+
 }

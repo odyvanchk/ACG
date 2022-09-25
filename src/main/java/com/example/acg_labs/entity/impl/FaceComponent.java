@@ -33,7 +33,7 @@ public class FaceComponent implements InfoComponent<Integer> {
     public int hashCode() {
         int result = 1;
         for (var e : infoComponents)
-            result = 31 * result- + (e==null ? 0 : e.hashCode());
+            result = 31 * result - +(e == null ? 0 : e.hashCode());
         return result;
     }
 }

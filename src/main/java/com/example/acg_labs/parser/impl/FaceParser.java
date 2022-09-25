@@ -1,17 +1,20 @@
 package com.example.acg_labs.parser.impl;
 
-import com.example.acg_labs.entity.impl.FaceComponent;
 import com.example.acg_labs.entity.InfoComponent;
+import com.example.acg_labs.entity.impl.FaceComponent;
 import com.example.acg_labs.parser.ObjParser;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FaceParser implements ObjParser {
     private static final FaceParser INSTANCE = new FaceParser();
 
-    private FaceParser() {}
+    private FaceParser() {
+    }
 
     public static FaceParser getInstance() {
         return INSTANCE;
@@ -33,7 +36,7 @@ public class FaceParser implements ObjParser {
                     for (int i = 1; i < splitLine.length; i++) {
                         var vert = new FaceComponent();
                         var splitFace = splitLine[i].split("/");
-                        for (String faceVertex: splitFace) {
+                        for (String faceVertex : splitFace) {
                             vert.add(Integer.valueOf(faceVertex));
                         }
                         vertex.add(vert);
