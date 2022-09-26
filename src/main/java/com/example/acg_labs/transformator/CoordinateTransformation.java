@@ -8,7 +8,7 @@ import static java.lang.Math.*;
 public class CoordinateTransformation {
     private static final CoordinateTransformation INSTANCE = new CoordinateTransformation();
     private Calculation calculator = Calculation.getInstance();
-    private double[] eye = {0.0, 0.0, 0.0, 0.0};
+    private double[] eye = {0.0, 0.0, 3.0, 0.0};
     private double[] target = {0.0, 0.0, -1.0, 0.0};
     private double[] up = {0.0, 1.0, 0.0, 0.0};
     private double zNear = 1.0;
@@ -35,9 +35,9 @@ public class CoordinateTransformation {
 
     public double[] fromModelToWorld(double[] vector) {
         double[] res;
-        double[][] matrix = {{20, 0.0, 0.0, 0.0},
-                            {0.0, 20, 0.0, 0.0},
-                            {0.0, 0.0, 20, 0.0},
+        double[][] matrix = {{20.0, 0.0, 0.0, 3.0},
+                            {0.0, 20.0, 0.0, 0.0},
+                            {0.0, 0.0, 20.0, 0.0},
                             {0.0, 0.0, 0.0, 1.0}};
         res = calculator.matrixVectorProduct(matrix, vector);
         return res;
@@ -47,7 +47,7 @@ public class CoordinateTransformation {
         double[] res;
         double[] zAxis = calculator.normalizeVector(calculator.subtractVector(eye, target));
         double[] xAxis = calculator.normalizeVector(calculator.crossProduct(up, zAxis));
-        double[] yAxis = up;
+        double[] yAxis = calculator.crossProduct(zAxis, xAxis);
         double[][] matrix = {{xAxis[0], xAxis[1], xAxis[2], -calculator.dotProduct(xAxis, eye)},
                              {yAxis[0], yAxis[1], yAxis[2], -calculator.dotProduct(yAxis, eye)},
                              {zAxis[0], zAxis[1], zAxis[2], -calculator.dotProduct(zAxis, eye)},
@@ -77,7 +77,7 @@ public class CoordinateTransformation {
     }
 
     public void updateTranslateCoordinate(KeyEvent keyEvent) {
-        double translation = 0.3;
+        double translation = 0.4;
         switch (keyEvent.getCode()) {
             case UP -> {
                 distY += translation;
@@ -144,13 +144,8 @@ public class CoordinateTransformation {
                               {0.0,         1.0, 0.0,          0.0},
                               {-sin(tempX), 0.0, cos(tempX),  0.0},
                               {0.0,         0.0, 0.0,          1.0}};
-//        double[][] matrixZ = {{Math.cos(tempY), -Math.sin(tempY), 0.0, 0.0},
-//                             {Math.sin(tempY),   Math.cos(tempY), 0.0, 0.0},
-//                             {0.0,                0.0,              1.0, 0.0},
-//                             {0.0,                0.0,              0.0, 1.0}};
-        double[] temp = calculator.matrixVectorProduct(matrixX, vector);
-//        temp = calculator.matrixVectorProduct(matrixZ, temp);
-        res = calculator.matrixVectorProduct(matrixY, temp);
+        double[] temp = calculator.matrixVectorProduct(matrixY, vector);
+        res = calculator.matrixVectorProduct(matrixX, temp);
         return res;
     }
 }

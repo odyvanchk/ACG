@@ -66,7 +66,7 @@ public class Calculation {
 
     public double[] subtractVector(double[] minuend, double[] subtrahend) {
         double[] res = new double[4];
-        for (int i = 0; i < minuend.length; i++) {
+        for (int i = 0; i < minuend.length - 1; i++) {
             res[i] = minuend[i] - subtrahend[i];
         }
         return res;
