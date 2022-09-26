@@ -13,50 +13,46 @@ public class BrezenhamDrawer {
         return INSTANCE;
     }
 
-    public void draw(int x0, int y0, int x1, int y1, PixelWriter px) {
-        int A, B, sign;
-        A = y1 - y0;
-        B = x0 - x1;
-        if (Math.abs(A) > Math.abs(B))
-            sign = 1;
-        else
-            sign = -1;
+    public void draw(int x1, int y1, int x2, int y2, PixelWriter px) {
+        // delta of exact value and rounded value of the dependent variable
+        int d = 0;
 
-        int signa, signb;
-        if (A < 0)
-            signa = -1;
-        else
-            signa = 1;
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
 
-        if (B < 0)
-            signb = -1;
-        else
-            signb = 1;
+        int dx2 = 2 * dx; // slope scaling factors to
+        int dy2 = 2 * dy; // avoid floating point
 
-        int f = 0;
-        px.setColor(x0, y0, Color.BLUE);
+        int ix = x1 < x2 ? 1 : -1; // increment direction
+        int iy = y1 < y2 ? 1 : -1;
 
-        int x = x0, y = y0;
-        if (sign == -1) {
-            do {
-                f += A * signa;
-                if (f > 0) {
-                    f -= B * signb;
-                    y += signa;
-                }
-                x -= signb;
+        int x = x1;
+        int y = y1;
+
+        if (dx >= dy) {
+            while (true) {
                 px.setColor(x, y, Color.BLUE);
-            } while ((x != x1 || y != y1) && !(x0 == x1 && y0 == y1));
+                if (x == x2)
+                    break;
+                x += ix;
+                d += dy2;
+                if (d > dx) {
+                    y += iy;
+                    d -= dx2;
+                }
+            }
         } else {
-            do {
-                f += B * signb;
-                if (f > 0) {
-                    f -= A * signa;
-                    x -= signb;
-                }
-                y += signa;
+            while (true) {
                 px.setColor(x, y, Color.BLUE);
-            } while ((x != x1 || y != y1) && !(x0 == x1 && y0 == y1));
+                if (y == y2)
+                    break;
+                y += iy;
+                d += dx2;
+                if (d > dy) {
+                    x += ix;
+                    d -= dy2;
+                }
+            }
         }
     }
 }

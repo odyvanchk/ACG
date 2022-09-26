@@ -11,8 +11,8 @@ public class CoordinateTransformation {
     private double[] eye = {0.0, 0.0, 3.0, 0.0};
     private double[] target = {0.0, 0.0, -1.0, 0.0};
     private double[] up = {0.0, 1.0, 0.0, 0.0};
-    private double zNear = 1.0;
-    private double zFar = 100.0;
+    private double zNear = 400.0;
+    private double zFar = 1000.0;
     private double width = 1300.0;
     private double height = 800.0;
     private double xMin = 0.0;
