@@ -35,7 +35,9 @@ public class Calculation {
             }
             res[i] += matrix[i][matrix[0].length - 1];
         }
-        res[3] = vector[3] * matrix[3][3];
+        for (int i = 0; i < 4; i++) {
+            res[3] += vector[3] * matrix[3][i];
+        }
         return res;
     }
 

@@ -8,13 +8,13 @@ import static java.lang.Math.*;
 public class CoordinateTransformation {
     private static final CoordinateTransformation INSTANCE = new CoordinateTransformation();
     private Calculation calculator = Calculation.getInstance();
-    private double[] eye = {0.0, 0.0, 3.0, 0.0};
+    private double[] eye = {0.0, 0.0, 30.0, 0.0};
     private double[] target = {0.0, 0.0, -1.0, 0.0};
     private double[] up = {0.0, 1.0, 0.0, 0.0};
-    private double zNear = 400.0;
-    private double zFar = 1000.0;
-    private double width = 1300.0;
-    private double height = 800.0;
+    private double zNear = 1.0;
+    private double zFar = 100.0;
+    private static double width = 1300.0;
+    private static double height = 800.0;
     private double xMin = 0.0;
     private double yMin = 0.0;
     private static double angleX = 0.0;
@@ -24,6 +24,8 @@ public class CoordinateTransformation {
     private static double scaleX = 1.0;
     private static double scaleY = 1.0;
     private static double scaleZ = 1.0;
+    private static double fov = 60;
+    private static double aspect = width / height;
 
 
     private CoordinateTransformation() {
@@ -35,9 +37,9 @@ public class CoordinateTransformation {
 
     public double[] fromModelToWorld(double[] vector) {
         double[] res;
-        double[][] matrix = {{20.0, 0.0, 0.0, 3.0},
-                            {0.0, 20.0, 0.0, 0.0},
-                            {0.0, 0.0, 20.0, 0.0},
+        double[][] matrix = {{0.5, 0.0, 0.0, 3.0},
+                            {0.0, 0.5, 0.0, 0.0},
+                            {0.0, 0.0, 0.5, 0.0},
                             {0.0, 0.0, 0.0, 1.0}};
         res = calculator.matrixVectorProduct(matrix, vector);
         return res;
@@ -58,11 +60,22 @@ public class CoordinateTransformation {
 
     public double[] fromCameraToProjection(double[] vector) {
         double[] res;
-        double[][] matrix = {{2.0 * zNear / width, 0.0,                  0.0,                   0.0},
-                             {0.0,                 2.0 * zNear / height, 0.0,                   0.0},
-                             {0.0,                 0.0,                  zFar / (zNear - zFar), zNear * zFar / (zNear - zFar)},
-                             {0.0,                 0.0,                  1.0,                   0.0}};
+        System.out.println(vector[0] + " " + vector[1] + " " + vector[2] + " " + vector[3]);
+//        double[][] matrix = {{2.0 * zNear / width, 0.0,                  0.0,                   0.0},
+//                             {0.0,                 2.0 * zNear / height, 0.0,                   0.0},
+//                             {0.0,                 0.0,                  zFar / (zNear - zFar), zNear * zFar / (zNear - zFar)},
+//                             {0.0,                 0.0,                  -1.0,                   0.0}};
+        System.out.println(Math.tan(Math.toRadians(fov / 2)));
+        double[][] matrix = {{1 / (aspect * Math.tan(Math.toRadians(fov / 2))), 0.0,                  0.0,                   0.0},
+                {0.0,                 1 / Math.tan(Math.toRadians(fov / 2)), 0.0,                   0.0},
+                {0.0,                 0.0,                  zFar / (zNear - zFar), zNear * zFar / (zNear - zFar)},
+                {0.0,                 0.0,                  -1.0,                   0.0}};
         res = calculator.matrixVectorProduct(matrix, vector);
+        System.out.println(res[0] + " " + res[1] + " " + res[2] + " " + res[3]);
+        for (int j = 0; j < res.length - 1; j++) {
+            res[j] /= res[res.length - 1];
+        }
+        System.out.println(res[0] + " " + res[1] + " " + res[2] + " " + res[3]);
         return res;
     }
 
