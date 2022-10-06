@@ -14,10 +14,7 @@ public class TransformVertexService implements TransformService {
         for (int i = 0; i < vertexes.length; i++) {
             var rotation = coordTrans.rotateCoordinate(vertexes[i]);
             var trans = coordTrans.translateCoordinate(rotation);
-            var world = coordTrans.fromModelToWorld(trans);
-            var camera = coordTrans.fromWorldToCamera(world);
-            var projection = coordTrans.fromCameraToProjection(camera);
-            var viewport = coordTrans.fromProjectionToViewport(projection);
+            var viewport = coordTrans.transform3DTo2DVector(trans);
 
             res[i] = viewport;
         }

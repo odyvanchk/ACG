@@ -8,84 +8,71 @@ import static java.lang.Math.*;
 public class CoordinateTransformation {
     private static final CoordinateTransformation INSTANCE = new CoordinateTransformation();
     private Calculation calculator = Calculation.getInstance();
-    private double[] eye = {0.0, 0.0, 30.0, 0.0};
+    private static double[][] matrix3DTo2D;
+    private double[] eye = {0.0, 0.0, 1.0, 0.0};
     private double[] target = {0.0, 0.0, -1.0, 0.0};
     private double[] up = {0.0, 1.0, 0.0, 0.0};
-    private double zNear = 1.0;
-    private double zFar = 100.0;
-    private static double width = 1300.0;
-    private static double height = 800.0;
-    private double xMin = 0.0;
-    private double yMin = 0.0;
-    private static double angleX = 0.0;
-    private static double angleY = 0.0;
+    private static final double Z_NEAR = 1.0;
+    private static final double Z_FAR = 100.0;
+    private static final double WIDTH = 1300.0;
+    private static final double HEIGHT = 800.0;
+    private static final double XMIN = 0.0;
+    private static final double YMIN = 0.0;
+    private static double angleX = 30.0;
+    private static double angleY = 20.0;
     private static double distX = 0.0;
     private static double distY = 0.0;
     private static double scaleX = 1.0;
     private static double scaleY = 1.0;
     private static double scaleZ = 1.0;
-    private static double fov = 60;
-    private static double aspect = width / height;
+    private static final double FOV = 50;
+    private static final double ASPECT = WIDTH / HEIGHT;
 
 
     private CoordinateTransformation() {
+        matrix3DTo2D = make3Dto2DMatrix();
     }
 
     public static CoordinateTransformation getInstance() {
         return INSTANCE;
     }
 
-    public double[] fromModelToWorld(double[] vector) {
-        double[] res;
-        double[][] matrix = {{0.5, 0.0, 0.0, 3.0},
-                            {0.0, 0.5, 0.0, 0.0},
-                            {0.0, 0.0, 0.5, 0.0},
-                            {0.0, 0.0, 0.0, 1.0}};
-        res = calculator.matrixVectorProduct(matrix, vector);
-        return res;
-    }
-
-    public double[] fromWorldToCamera(double[] vector) {
-        double[] res;
+    private double[][] make3Dto2DMatrix() {
+        double[][] res;
+        double[][] fromModelToWorld =
+                            {{1.0, 0.0, 0.0, 0.0},
+                             {0.0, 1.0, 0.0, -2.0},
+                             {0.0, 0.0, 1.0, -55.0},
+                             {0.0, 0.0, 0.0, 1.0}};
         double[] zAxis = calculator.normalizeVector(calculator.subtractVector(eye, target));
         double[] xAxis = calculator.normalizeVector(calculator.crossProduct(up, zAxis));
         double[] yAxis = calculator.crossProduct(zAxis, xAxis);
-        double[][] matrix = {{xAxis[0], xAxis[1], xAxis[2], -calculator.dotProduct(xAxis, eye)},
-                             {yAxis[0], yAxis[1], yAxis[2], -calculator.dotProduct(yAxis, eye)},
-                             {zAxis[0], zAxis[1], zAxis[2], -calculator.dotProduct(zAxis, eye)},
-                             {0.0,      0.0,      0.0,       1.0}};
-        res = calculator.matrixVectorProduct(matrix, vector);
+        double[][] fromWorldToCamera =
+               {{xAxis[0], xAxis[1], xAxis[2], -calculator.dotProduct(xAxis, eye)},
+                {yAxis[0], yAxis[1], yAxis[2], -calculator.dotProduct(yAxis, eye)},
+                {zAxis[0], zAxis[1], zAxis[2], -calculator.dotProduct(zAxis, eye)},
+                {0.0,      0.0,      0.0,       1.0}};
+        double[][] fromCameraToProjection =
+               {{1 / (ASPECT * Math.tan(Math.toRadians(FOV / 2))), 0.0,      0.0,                      0.0},
+                {0.0,                 1 / Math.tan(Math.toRadians(FOV / 2)), 0.0,                      0.0},
+                {0.0,                 0.0,                                   Z_FAR / (Z_NEAR - Z_FAR), Z_NEAR * Z_FAR / (Z_NEAR - Z_FAR)},
+                {0.0,                 0.0,                                   -1.0,                     0.0}};
+        double[][] fromProjectionToViewport =
+               {{WIDTH / 2.0, 0.0,           0.0, XMIN + WIDTH / 2.0},
+                {0.0,         -HEIGHT / 2.0, 0.0, YMIN + HEIGHT / 2.0},
+                {0.0,         0.0,           1.0, 0.0},
+                {0.0,         0.0,           0.0, 1.0}};
+        res = calculator.matrixesProduct(fromWorldToCamera, fromModelToWorld);
+        res = calculator.matrixesProduct(fromCameraToProjection, res);
+        res = calculator.matrixesProduct(fromProjectionToViewport, res);
         return res;
     }
 
-    public double[] fromCameraToProjection(double[] vector) {
-        double[] res;
-        System.out.println(vector[0] + " " + vector[1] + " " + vector[2] + " " + vector[3]);
-//        double[][] matrix = {{2.0 * zNear / width, 0.0,                  0.0,                   0.0},
-//                             {0.0,                 2.0 * zNear / height, 0.0,                   0.0},
-//                             {0.0,                 0.0,                  zFar / (zNear - zFar), zNear * zFar / (zNear - zFar)},
-//                             {0.0,                 0.0,                  -1.0,                   0.0}};
-        System.out.println(Math.tan(Math.toRadians(fov / 2)));
-        double[][] matrix = {{1 / (aspect * Math.tan(Math.toRadians(fov / 2))), 0.0,                  0.0,                   0.0},
-                {0.0,                 1 / Math.tan(Math.toRadians(fov / 2)), 0.0,                   0.0},
-                {0.0,                 0.0,                  zFar / (zNear - zFar), zNear * zFar / (zNear - zFar)},
-                {0.0,                 0.0,                  -1.0,                   0.0}};
-        res = calculator.matrixVectorProduct(matrix, vector);
-        System.out.println(res[0] + " " + res[1] + " " + res[2] + " " + res[3]);
-        for (int j = 0; j < res.length - 1; j++) {
+    public double[] transform3DTo2DVector(double[] vector) {
+        double[] res = calculator.matrixVectorProduct(matrix3DTo2D, vector);
+        for (int j = 0; j < res.length; j++) {
             res[j] /= res[res.length - 1];
         }
-        System.out.println(res[0] + " " + res[1] + " " + res[2] + " " + res[3]);
-        return res;
-    }
-
-    public double[] fromProjectionToViewport(double[] vector) {
-        double[] res;
-        double[][] matrix = {{width / 2.0, 0.0,            0.0, xMin + width / 2.0},
-                            {0.0,          - height / 2.0, 0.0, yMin + height / 2.0},
-                            {0.0,          0.0,            1.0, 0.0},
-                            {0.0,          0.0,            0.0, 1.0}};
-        res = calculator.matrixVectorProduct(matrix, vector);
         return res;
     }
 
@@ -149,14 +136,14 @@ public class CoordinateTransformation {
         double coef = 0.01;
         double tempX = coef * angleX;
         double tempY = coef * angleY;
-        double[][] matrixX = {{1.0, 0.0,          0.0,         0.0},
-                              {0.0, cos(tempY),  -sin(tempY), 0.0},
-                              {0.0, sin(tempY), cos(tempY), 0.0},
-                              {0.0, 0.0,          0.0,         1.0}};
-        double[][] matrixY = {{cos(tempX), 0.0, sin(tempX), 0.0},
-                              {0.0,         1.0, 0.0,          0.0},
-                              {-sin(tempX), 0.0, cos(tempX),  0.0},
-                              {0.0,         0.0, 0.0,          1.0}};
+        double[][] matrixX = {{1.0, 0.0,        0.0,         0.0},
+                              {0.0, cos(tempY), -sin(tempY), 0.0},
+                              {0.0, sin(tempY), cos(tempY),  0.0},
+                              {0.0, 0.0,        0.0,         1.0}};
+        double[][] matrixY = {{cos(tempX),  0.0, sin(tempX), 0.0},
+                              {0.0,         1.0, 0.0,        0.0},
+                              {-sin(tempX), 0.0, cos(tempX), 0.0},
+                              {0.0,         0.0, 0.0,        1.0}};
         double[] temp = calculator.matrixVectorProduct(matrixY, vector);
         res = calculator.matrixVectorProduct(matrixX, temp);
         return res;

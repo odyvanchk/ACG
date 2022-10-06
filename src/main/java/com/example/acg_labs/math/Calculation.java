@@ -30,13 +30,9 @@ public class Calculation {
     public double[] matrixVectorProduct(double[][] matrix, double[] vector) {
         double[] res = new double[vector.length];
         for (int i = 0; i < vector.length; i++) {
-            for (int j = 0; j < matrix[i].length - 1; j++) {
+            for (int j = 0; j < matrix[i].length; j++) {
                 res[i] += vector[j] * matrix[i][j];
             }
-            res[i] += matrix[i][matrix[0].length - 1];
-        }
-        for (int i = 0; i < 4; i++) {
-            res[3] += vector[3] * matrix[3][i];
         }
         return res;
     }
