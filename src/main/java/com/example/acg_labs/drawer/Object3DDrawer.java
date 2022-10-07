@@ -1,14 +1,17 @@
 package com.example.acg_labs.drawer;
 
 import com.example.acg_labs.entity.InfoComponent;
+import com.example.acg_labs.service.FaceRejection;
 import javafx.scene.image.PixelWriter;
 
 import java.util.List;
 
 public class Object3DDrawer {
+    private FaceRejection faceRejection = FaceRejection.getInstance();
 
     public void draw(List<List<InfoComponent>> faces, double[][] vertexes, PixelWriter px) {
-        for (var face : faces) {
+        List<List<InfoComponent>> newFaces = faceRejection.rejectFacesFromCamera(faces, vertexes);
+        for (var face : newFaces) {
             int first = (int) face.get(0).getChildren().get(0);
             int last = (int) face.get(face.size() - 1).getChildren().get(0);
             for (int i = 0; i < face.size() - 1; i++) {

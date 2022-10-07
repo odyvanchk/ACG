@@ -1,4 +1,4 @@
-package com.example.acg_labs.transformator;
+package com.example.acg_labs.service;
 
 import com.example.acg_labs.math.Calculation;
 import javafx.scene.input.KeyEvent;
@@ -12,7 +12,7 @@ public class CoordinateTransformation {
     private double[] eye = {0.0, 0.0, 1.0, 0.0};
     private double[] target = {0.0, 0.0, -1.0, 0.0};
     private double[] up = {0.0, 1.0, 0.0, 0.0};
-    private static final double Z_NEAR = 1.0;
+    private static final double Z_NEAR = 0.1;
     private static final double Z_FAR = 100.0;
     private static final double WIDTH = 1300.0;
     private static final double HEIGHT = 800.0;
@@ -25,7 +25,7 @@ public class CoordinateTransformation {
     private static double scaleX = 1.0;
     private static double scaleY = 1.0;
     private static double scaleZ = 1.0;
-    private static final double FOV = 50;
+    private static final double FOV = 60;
     private static final double ASPECT = WIDTH / HEIGHT;
 
 

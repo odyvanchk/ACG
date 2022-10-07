@@ -69,4 +69,21 @@ public class Calculation {
         }
         return res;
     }
+
+    public double findVertexLength(double[] vector) {
+        double res = 0.0;
+        for (int i = 0; i < vector.length - 1; i++) {
+            res += Math.pow(vector[i], 2.0);
+        }
+        res = Math.sqrt(res);
+        return res;
+    }
+
+    public double findCosDegreeBetweenVectors(double[] vector1, double[] vector2) {
+        double res;
+        double numerator = dotProduct(vector1, vector2);
+        double denumerator = findVertexLength(vector1) * findVertexLength(vector2);
+        res = numerator / denumerator;
+        return res;
+    }
 }

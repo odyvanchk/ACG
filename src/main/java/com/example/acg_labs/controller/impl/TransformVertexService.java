@@ -2,7 +2,7 @@ package com.example.acg_labs.controller.impl;
 
 import com.example.acg_labs.controller.TransformService;
 import com.example.acg_labs.model.Model3D;
-import com.example.acg_labs.transformator.CoordinateTransformation;
+import com.example.acg_labs.service.CoordinateTransformation;
 import javafx.scene.input.KeyEvent;
 
 public class TransformVertexService implements TransformService {
