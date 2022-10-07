@@ -10,6 +10,15 @@ import java.util.Objects;
 public class FaceComponent implements InfoComponent<Integer> {
 
     private final List<Integer> infoComponents = new ArrayList<>();
+    private int[] color = {128, 128, 128};
+
+    public int[] getColor() {
+        return color;
+    }
+
+    public void updateColor(int[] newColor) {
+        color = newColor;
+    }
 
     @Override
     public void add(Integer element) {

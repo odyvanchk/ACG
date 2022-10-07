@@ -12,7 +12,7 @@ public class CoordinateTransformation {
     private double[] eye = {0.0, 0.0, 1.0, 0.0};
     private double[] target = {0.0, 0.0, -1.0, 0.0};
     private double[] up = {0.0, 1.0, 0.0, 0.0};
-    private static final double Z_NEAR = 0.1;
+    private static final double Z_NEAR = 1.0;
     private static final double Z_FAR = 100.0;
     private static final double WIDTH = 1300.0;
     private static final double HEIGHT = 800.0;

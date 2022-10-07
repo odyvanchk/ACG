@@ -13,7 +13,7 @@ public class BrezenhamDrawer {
         return INSTANCE;
     }
 
-    public void draw(int x1, int y1, int x2, int y2, PixelWriter px) {
+    public void draw(int x1, int y1, int x2, int y2, PixelWriter px, Color color) {
         // delta of exact value and rounded value of the dependent variable
         int d = 0;
 
@@ -31,7 +31,7 @@ public class BrezenhamDrawer {
 
         if (dx >= dy) {
             while (true) {
-                px.setColor(x, y, Color.BLUE);
+                px.setColor(x, y, color);
                 if (x == x2)
                     break;
                 x += ix;
@@ -43,7 +43,7 @@ public class BrezenhamDrawer {
             }
         } else {
             while (true) {
-                px.setColor(x, y, Color.BLUE);
+                px.setColor(x, y, color);
                 if (y == y2)
                     break;
                 y += iy;

@@ -21,20 +21,20 @@ public class FaceRejection {
     public List<List<InfoComponent>> rejectFacesFromCamera(List<List<InfoComponent>> faces, double[][] vertexes) {
         List<List<InfoComponent>> res = new ArrayList<>();
         for (var face: faces) {
-            double[][] triange = new double[5][4];
-            triange[1] = vertexes[(int) face.get(0).getChildren().get(0) - 1];
-            triange[2] = vertexes[(int) face.get(1).getChildren().get(0) - 1];
-            triange[3] = vertexes[(int) face.get(2).getChildren().get(0) - 1];
-            triange[0] = triange[3];
-            triange[4] = triange[1];
+            double[][] triangle = new double[5][4];
+            triangle[1] = vertexes[(int) face.get(0).getChildren().get(0) - 1];
+            triangle[2] = vertexes[(int) face.get(1).getChildren().get(0) - 1];
+            triangle[3] = vertexes[(int) face.get(2).getChildren().get(0) - 1];
+            triangle[0] = triangle[3];
+            triangle[4] = triangle[1];
             int i = 0;
             double cos = -1.0;
             double[] vertexAB = new double[4];
             double[] vertexCB = new double[4];
             while ((cos >= 1 || cos < 0) && i < 3) {
                 i++;
-                vertexAB = calculator.subtractVector(triange[i - 1], triange[i]);
-                vertexCB = calculator.subtractVector(triange[i + 1], triange[i]);
+                vertexAB = calculator.subtractVector(triangle[i - 1], triangle[i]);
+                vertexCB = calculator.subtractVector(triangle[i + 1], triangle[i]);
                 cos = calculator.findCosDegreeBetweenVectors(vertexAB, vertexCB);
             }
             double[] normal = calculator.crossProduct(vertexCB, vertexAB);

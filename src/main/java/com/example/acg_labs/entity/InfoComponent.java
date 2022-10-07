@@ -7,5 +7,9 @@ public interface InfoComponent<T extends Number> {
 
     List<T> getChildren();
 
+    int[] getColor();
+
+    void updateColor(int[] newColor);
+
     //ComponentType getType();
 }

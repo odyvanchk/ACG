@@ -11,6 +11,7 @@ import java.util.List;
 public class Model3D {
 
     private double[][] vertexesD;
+    private double[][] normalVertexesD;
     private final List<List<InfoComponent>> faces;
 
 
@@ -18,6 +19,8 @@ public class Model3D {
         faces = FaceParser.getInstance().parse(path, ObjParser.FACE);
         var vertex = VertexParser.getInstance().parse(path, ObjParser.VERTEX);
         vertexesD = VertexParser.getInstance().infoComponentToDouble(vertex);
+        var normalVertex = VertexParser.getInstance().parse(path, ObjParser.NORMAL_VECTOR);
+        normalVertexesD = VertexParser.getInstance().infoComponentToDouble(normalVertex);
     }
 
 
@@ -27,6 +30,10 @@ public class Model3D {
 
     public double[][] getVertexesD() {
         return vertexesD;
+    }
+
+    public double[][] getNormalVertexesD() {
+        return normalVertexesD;
     }
 
     public void updateVertexesD(double[][] newVertexesD) {
