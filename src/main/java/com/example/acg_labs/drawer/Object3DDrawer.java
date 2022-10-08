@@ -12,9 +12,9 @@ public class Object3DDrawer {
     private FaceRejection faceRejection = FaceRejection.getInstance();
     private Lighting lighting = Lighting.getInstance();
 
-    public void draw(List<List<InfoComponent>> faces, double[][] vertexes, PixelWriter px) {
+    public void draw(List<List<InfoComponent>> faces, double[][] vertexes, double[][] normalVertexes, PixelWriter px) {
         List<List<InfoComponent>> newFaces = faceRejection.rejectFacesFromCamera(faces, vertexes);
-        lighting.modelLambert(faces, vertexes);
+        lighting.modelLambert(newFaces, vertexes, normalVertexes);
         for (var face : newFaces) {
             Color color = Color.rgb(face.get(0).getColor()[0],
                     face.get(0).getColor()[1],

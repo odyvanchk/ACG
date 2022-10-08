@@ -8,7 +8,7 @@ import java.util.List;
 public class Lighting {
     private static final Lighting INSTANCE = new Lighting();
     private Calculation calculator = Calculation.getInstance();
-    private double[] light = {0, 100, 100};
+    private double[] light = {500, 500, 500, 0};
 
     private Lighting() {
     }
@@ -17,13 +17,17 @@ public class Lighting {
         return INSTANCE;
     }
 
-    public void modelLambert(List<List<InfoComponent>> faces, double[][] normalVertex) {
+    public void modelLambert(List<List<InfoComponent>> faces, double[][] vertexes, double[][] normalVertexes) {
         for (var face: faces) {
             double[] color = new double[3];
             for (int i = 0; i < 3; i++) {
-                double[] vertex = normalVertex[(int) face.get(i).getChildren().get(2) - 1];
-                double cos = Math.abs(calculator.findCosDegreeBetweenVectors(light, vertex));
-                color[i] = (1 - cos) * 255;
+                double[] vertex = vertexes[(int) face.get(i).getChildren().get(2) - 1];
+                double[] newLight = calculator.subtractVector(light, vertex);
+                double[] normalVertex = normalVertexes[(int) face.get(i).getChildren().get(2) - 1];
+                double cos = calculator.findCosDegreeBetweenVectors(newLight, normalVertex);
+                if (cos >= 0) {
+                    color[i] = (1 - cos) * 255;
+                }
             }
             int mean = (int) (color[0] + color[1] + color[2]) / 3;
             int[] meanColor = {mean, mean, mean};

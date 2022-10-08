@@ -27,11 +27,12 @@ public class Model3DController implements Initializable {
     public void onMouseDraggedOnCanvas(MouseEvent mouseEvent) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        double[][] resultVertexes = transformService.rotateModel(model3D,
+        double[][] resultVertexes = transformService.rotateModel(model3D.getVertexesD(),
                 oldX - mouseEvent.getSceneX(), oldY - mouseEvent.getSceneY());
+        double[][] resultNormalVertexes = transformService.fromModelToView(model3D.getNormalVertexesD());
         oldX = mouseEvent.getSceneX();
         oldY = mouseEvent.getSceneY();
-        drawer.draw(model3D.getFaces(), resultVertexes, canvas.getGraphicsContext2D().getPixelWriter());
+        drawer.draw(model3D.getFaces(), resultVertexes, resultNormalVertexes, canvas.getGraphicsContext2D().getPixelWriter());
     }
 
     public void onMousePressedOnCanvas(MouseEvent mouseEvent) {
@@ -42,8 +43,9 @@ public class Model3DController implements Initializable {
     public void onKeyPressedOnCanvas(KeyEvent keyEvent) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        double[][] resultVertexes = transformService.translateModel(model3D, keyEvent);
-        drawer.draw(model3D.getFaces(), resultVertexes, canvas.getGraphicsContext2D().getPixelWriter());
+        double[][] resultVertexes = transformService.translateModel(model3D.getVertexesD(), keyEvent);
+        double[][] resultNormalVertexes = transformService.fromModelToView(model3D.getNormalVertexesD());
+        drawer.draw(model3D.getFaces(), resultVertexes, resultNormalVertexes, canvas.getGraphicsContext2D().getPixelWriter());
     }
 
     @Override
@@ -53,7 +55,8 @@ public class Model3DController implements Initializable {
             model3D = new Model3D("src/main/resources/models/model.obj");
 
             double[][] resultVertexes = transformService.fromModelToView(model3D.getVertexesD());
-            drawer.draw(model3D.getFaces(), resultVertexes, canvas.getGraphicsContext2D().getPixelWriter());
+            double[][] resultNormalVertexes = transformService.fromModelToView(model3D.getNormalVertexesD());
+            drawer.draw(model3D.getFaces(), resultVertexes, resultNormalVertexes, canvas.getGraphicsContext2D().getPixelWriter());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -10,7 +10,7 @@ import java.util.Objects;
 public class FaceComponent implements InfoComponent<Integer> {
 
     private final List<Integer> infoComponents = new ArrayList<>();
-    private int[] color = {128, 128, 128};
+    private int[] color = {0, 0, 0};
 
     public int[] getColor() {
         return color;

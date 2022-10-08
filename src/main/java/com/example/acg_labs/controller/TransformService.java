@@ -8,7 +8,7 @@ public interface TransformService {
 
     double[][] fromModelToView(double[][] vertexes);
 
-    double[][] translateModel(Model3D model3D, KeyEvent keyEvent);
+    double[][] translateModel(double[][] vertexes, KeyEvent keyEvent);
 
-    double[][] rotateModel(Model3D model3D, double transX, double transY);
+    double[][] rotateModel(double[][] vertexes, double transX, double transY);
 }
