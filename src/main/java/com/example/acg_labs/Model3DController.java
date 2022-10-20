@@ -2,7 +2,9 @@ package com.example.acg_labs;
 
 import com.example.acg_labs.controller.TransformService;
 import com.example.acg_labs.controller.impl.TransformVertexService;
+import com.example.acg_labs.drawer.Drawer;
 import com.example.acg_labs.drawer.Object3DDrawer;
+import com.example.acg_labs.drawer.Object3DDrawerFilled;
 import com.example.acg_labs.model.Model3D;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,8 +21,8 @@ public class Model3DController implements Initializable {
     @FXML
     private Canvas canvas;
     private Model3D model3D;
-    private Object3DDrawer drawer = new Object3DDrawer();
-    private TransformService transformService = new TransformVertexService();
+    private final Drawer drawer = new Object3DDrawerFilled();
+    private final TransformService transformService = new TransformVertexService();
     private double oldX;
     private double oldY;
 

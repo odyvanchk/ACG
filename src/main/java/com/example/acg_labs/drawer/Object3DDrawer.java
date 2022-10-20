@@ -3,19 +3,18 @@ package com.example.acg_labs.drawer;
 import com.example.acg_labs.entity.InfoComponent;
 import com.example.acg_labs.service.FaceRejection;
 import com.example.acg_labs.service.Lighting;
+import javafx.scene.effect.Light;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
 import java.util.List;
 
-public class Object3DDrawer {
-    private FaceRejection faceRejection = FaceRejection.getInstance();
-    private Lighting lighting = Lighting.getInstance();
+public class Object3DDrawer implements Drawer {
+
 
     public void draw(List<List<InfoComponent>> faces, double[][] vertexes, double[][] normalVertexes, PixelWriter px) {
-        List<List<InfoComponent>> newFaces = faceRejection.rejectFacesFromCamera(faces, vertexes);
-        lighting.modelLambert(newFaces, vertexes, normalVertexes);
-        for (var face : newFaces) {
+
+        for (var face : faces) {
             Color color = Color.rgb(face.get(0).getColor()[0],
                     face.get(0).getColor()[1],
                     face.get(0).getColor()[2]);
@@ -35,4 +34,5 @@ public class Object3DDrawer {
                     (int) vertexes[last - 1][1], px, color);
         }
     }
+
 }
