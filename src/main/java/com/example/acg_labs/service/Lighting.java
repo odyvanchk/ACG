@@ -8,7 +8,7 @@ import java.util.List;
 public class Lighting {
     private static final Lighting INSTANCE = new Lighting();
     private Calculation calculator = Calculation.getInstance();
-    private double[] light = {500, 500, 500, 0};
+    private double[] light = {2.5, 0, -5, 0};
 
     private Lighting() {
     }
@@ -25,9 +25,8 @@ public class Lighting {
                 double[] newLight = calculator.subtractVector(light, vertex);
                 double[] normalVertex = normalVertexes[(int) face.get(i).getChildren().get(2) - 1];
                 double cos = calculator.findCosDegreeBetweenVectors(newLight, normalVertex);
-                if (cos >= 0) {
-                    color[i] = (1 - cos) * 255;
-                }
+                cos++;
+                color[i] = (int) (cos * 255 / 2);
             }
             int mean = (int) (color[0] + color[1] + color[2]) / 3;
             int[] meanColor = {mean, mean, mean};
