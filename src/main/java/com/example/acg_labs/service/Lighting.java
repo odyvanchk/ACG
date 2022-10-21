@@ -24,7 +24,7 @@ public class Lighting {
                 double[] vertex = vertexes[(int) face.get(i).getChildren().get(2) - 1];
                 double[] newLight = calculator.subtractVector(light, vertex);
                 double[] normalVertex = normalVertexes[(int) face.get(i).getChildren().get(2) - 1];
-                double cos = calculator.findCosDegreeBetweenVectors(newLight, normalVertex);
+                double cos = calculator.findCosBetweenVectors(newLight, normalVertex);
                 cos++;
                 color[i] = (int) (cos * 255 / 2);
             }

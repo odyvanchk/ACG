@@ -79,7 +79,7 @@ public class Calculation {
         return res;
     }
 
-    public double findCosDegreeBetweenVectors(double[] vector1, double[] vector2) {
+    public double findCosBetweenVectors(double[] vector1, double[] vector2) {
         double res;
         double numerator = dotProduct(vector1, vector2);
         double denumerator = findVertexLength(vector1) * findVertexLength(vector2);

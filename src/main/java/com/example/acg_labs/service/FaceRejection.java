@@ -35,7 +35,7 @@ public class FaceRejection {
                 i++;
                 vertexAB = calculator.subtractVector(triangle[i - 1], triangle[i]);
                 vertexCB = calculator.subtractVector(triangle[i + 1], triangle[i]);
-                cos = calculator.findCosDegreeBetweenVectors(vertexAB, vertexCB);
+                cos = calculator.findCosBetweenVectors(vertexAB, vertexCB);
             }
             double[] normal = calculator.crossProduct(vertexCB, vertexAB);
             double dot = calculator.dotProduct(normal, eye);
