@@ -23,7 +23,7 @@ public class Object3DDrawerFilled implements Drawer {
 
         double[][] zBuffer = new double[WIN_HEIGHT][WIN_WIDTH];//y x
         for (var line : zBuffer) {
-            Arrays.fill(line, 1);
+            Arrays.fill(line, 1000);
         }
 
         for (var face : newFaces) {
@@ -95,12 +95,12 @@ public class Object3DDrawerFilled implements Drawer {
             // точками
             for (int j = (int) Math.round(wx1); j <= wx2; j++) {
                 double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
-                if (currZ < zBuffer[i][j]) {
-                    px.setColor(j, i, color);
-                    zBuffer[i][j] = currZ;
-
+                if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
+                    if (currZ <= zBuffer[i][j]) {
+                        px.setColor(j, i, color);
+                        zBuffer[i][j] = currZ;
+                    }
                 }
-
             }
             wx1 += dx13;
             wx2 += dx12;
@@ -127,9 +127,11 @@ public class Object3DDrawerFilled implements Drawer {
             // точками
             for (int j = (int) Math.round(wx1); j <= wx2; j++) {
                 double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
-                if (currZ < zBuffer[i][j]) {
-                    px.setColor(j, i, color);
-                    zBuffer[i][j] = currZ;
+                if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
+                    if (currZ <= zBuffer[i][j]) {
+                        px.setColor(j, i, color);
+                        zBuffer[i][j] = currZ;
+                    }
                 }
             }
             wx1 += _dx13;
@@ -148,9 +150,9 @@ public class Object3DDrawerFilled implements Drawer {
     }
 
     private double evaluateZ(int x, int y, double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
-        return ((((double) x - x1) * ((y3 - y1) * (z2 - z1) - (y2 - y1) * (z3 - z1)))
-                - (((double) y - y1) * ((x3 - x1) * (z2 - z1) - (x2 - x1) * (z3 - z1)))) /
-                (((x3 - x1) * (y2 - y1) - (x2 - x1) * (y3 - y1))) + z1;
+        return - ((((double) x - x1) * ((y2 - y1) * (z3 - z1) - (y3 - y1) * (z2 - z1)))
+                - (((double) y - y1) * ((x2 - x1) * (z3 - z1) - (x3 - x1) * (z2 - z1)))) /
+                ((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1)) + z1;
     }
 
 }
