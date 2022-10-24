@@ -23,7 +23,7 @@ public class Object3DDrawerFilled implements Drawer {
 
         double[][] zBuffer = new double[WIN_HEIGHT][WIN_WIDTH];//y x
         for (var line : zBuffer) {
-            Arrays.fill(line, 1000);
+            Arrays.fill(line, 1);
         }
 
         for (var face : newFaces) {
@@ -94,9 +94,10 @@ public class Object3DDrawerFilled implements Drawer {
             // рисуем горизонтальную линию между рабочими
             // точками
             for (int j = (int) Math.round(wx1); j <= wx2; j++) {
-                double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
+                double currZ = evaluateZ(j, i, p1[0], p1[1], p1i[2], p2[0], p2[1], p2i[2], p3[0], p3[1], p3i[2]);
+//                double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
-                    if (currZ <= zBuffer[i][j]) {
+                    if (currZ < zBuffer[i][j]) {
                         px.setColor(j, i, color);
                         zBuffer[i][j] = currZ;
                     }
@@ -126,9 +127,10 @@ public class Object3DDrawerFilled implements Drawer {
             // рисуем горизонтальную линию между рабочими
             // точками
             for (int j = (int) Math.round(wx1); j <= wx2; j++) {
-                double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
+                double currZ = evaluateZ(j, i, p1[0], p1[1], p1i[2], p2[0], p2[1], p2i[2], p3[0], p3[1], p3i[2]);
+//                double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
-                    if (currZ <= zBuffer[i][j]) {
+                    if (currZ < zBuffer[i][j]) {
                         px.setColor(j, i, color);
                         zBuffer[i][j] = currZ;
                     }
@@ -149,10 +151,15 @@ public class Object3DDrawerFilled implements Drawer {
         first[1] = tmp[1];
     }
 
-    private double evaluateZ(int x, int y, double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
-        return - ((((double) x - x1) * ((y2 - y1) * (z3 - z1) - (y3 - y1) * (z2 - z1)))
-                - (((double) y - y1) * ((x2 - x1) * (z3 - z1) - (x3 - x1) * (z2 - z1)))) /
-                ((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1)) + z1;
+    private double evaluateZ(int x, int y, int x1, int y1, double z1, int x2, int y2, double z2, int x3, int y3, double z3) {
+        double z = 1000.0;
+        if (Math.abs(((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1))) >= 1) {
+//        if (Math.abs((x3 - x1) / (x2 - x1) - (y3 - y1) / (y2 - y1)) >= 0.001) {
+            z = -((((double) x - x1) * ((y2 - y1) * (z3 - z1) - (y3 - y1) * (z2 - z1)))
+                    - (((double) y - y1) * ((x2 - x1) * (z3 - z1) - (x3 - x1) * (z2 - z1)))) /
+                    ((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1)) + z1;
+        }
+        return z;
     }
 
 }
