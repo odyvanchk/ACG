@@ -13,4 +13,6 @@ public interface TransformService {
     double[][] rotateModel(double[][] vertexes, double transX, double transY);
 
     double[][] changeLight(double[][] vertexes);
+
+    double[][] changeVertexes(double[][] vertexes);
 }

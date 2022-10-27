@@ -29,12 +29,16 @@ public class Model3DController implements Initializable {
     public void onMouseDraggedOnCanvas(MouseEvent mouseEvent) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        double[][] worldVertexes = transformService.changeVertexes(model3D.getVertexesD());
         double[][] resultVertexes = transformService.rotateModel(model3D.getVertexesD(),
                 oldX - mouseEvent.getSceneX(), oldY - mouseEvent.getSceneY());
         double[][] resultNormalVertexes = transformService.changeLight(model3D.getNormalVertexesD());
         oldX = mouseEvent.getSceneX();
         oldY = mouseEvent.getSceneY();
-        drawer.draw(model3D.getFaces(), resultVertexes, resultNormalVertexes, canvas.getGraphicsContext2D().getPixelWriter());
+        drawer.draw(model3D.getFaces(),
+                worldVertexes, resultVertexes,
+                model3D.getNormalVertexesD(), resultNormalVertexes,
+                canvas.getGraphicsContext2D().getPixelWriter());
     }
 
     public void onMousePressedOnCanvas(MouseEvent mouseEvent) {
@@ -45,9 +49,13 @@ public class Model3DController implements Initializable {
     public void onKeyPressedOnCanvas(KeyEvent keyEvent) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        double[][] worldVertexes = transformService.changeVertexes(model3D.getVertexesD());
         double[][] resultVertexes = transformService.translateModel(model3D.getVertexesD(), keyEvent);
         double[][] resultNormalVertexes = transformService.changeLight(model3D.getNormalVertexesD());
-        drawer.draw(model3D.getFaces(), resultVertexes, resultNormalVertexes, canvas.getGraphicsContext2D().getPixelWriter());
+        drawer.draw(model3D.getFaces(),
+                worldVertexes, resultVertexes,
+                model3D.getNormalVertexesD(), resultNormalVertexes,
+                canvas.getGraphicsContext2D().getPixelWriter());
     }
 
     @Override
@@ -56,8 +64,12 @@ public class Model3DController implements Initializable {
             canvas.setFocusTraversable(true);
             model3D = new Model3D("src/main/resources/models/model.obj");
 
+            double[][] worldVertexes = transformService.changeVertexes(model3D.getVertexesD());
             double[][] resultVertexes = transformService.fromModelToView(model3D.getVertexesD());
-            drawer.draw(model3D.getFaces(), resultVertexes, model3D.getNormalVertexesD(), canvas.getGraphicsContext2D().getPixelWriter());
+            drawer.draw(model3D.getFaces(),
+                    worldVertexes, resultVertexes,
+                    model3D.getNormalVertexesD(), model3D.getNormalVertexesD(),
+                    canvas.getGraphicsContext2D().getPixelWriter());
         } catch (IOException e) {
             e.printStackTrace();
         }

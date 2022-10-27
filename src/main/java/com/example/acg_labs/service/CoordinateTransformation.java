@@ -40,10 +40,10 @@ public class CoordinateTransformation {
     private double[][] make3Dto2DMatrix() {
         double[][] res;
         double[][] fromModelToWorld =
-                            {{1.0, 0.0, 0.0, 0.0},
-                             {0.0, 1.0, 0.0, -2.0},
-                             {0.0, 0.0, 1.0, -55.0},
-                             {0.0, 0.0, 0.0, 1.0}};
+                            {{5.0, 0.0, 0.0, 0.0},
+                             {0.0, 5.0, 0.0, -20.0},
+                             {0.0, 0.0, 5.0, -100.0},
+                             {0.0, 0.0, 0.0, 5.0}};
         double[] zAxis = calculator.normalizeVector(calculator.subtractVector(eye, target));
         double[] xAxis = calculator.normalizeVector(calculator.crossProduct(up, zAxis));
         double[] yAxis = calculator.crossProduct(zAxis, xAxis);
@@ -65,6 +65,16 @@ public class CoordinateTransformation {
         res = calculator.matrixesProduct(fromWorldToCamera, fromModelToWorld);
         res = calculator.matrixesProduct(fromCameraToProjection, res);
         res = calculator.matrixesProduct(fromProjectionToViewport, res);
+        return res;
+    }
+
+    public double[] fromModelToWorld(double[] vector) {
+        double[] res;
+        double[][] matrix = {{5.0, 0.0, 0.0, 0.0},
+                {0.0, 5.0, 0.0, -20.0},
+                {0.0, 0.0, 5.0, -100.0},
+                {0.0, 0.0, 0.0, 5.0}};
+        res = calculator.matrixVectorProduct(matrix, vector);
         return res;
     }
 

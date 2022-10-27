@@ -12,7 +12,10 @@ import java.util.List;
 public class Object3DDrawer implements Drawer {
 
 
-    public void draw(List<List<InfoComponent>> faces, double[][] vertexes, double[][] normalVertexes, PixelWriter px) {
+    public void draw(List<List<InfoComponent>> faces,
+                     double[][] vertexes, double[][] rVertexes,
+                     double[][] normalVertexes, double[][] normalRVertexes,
+                     PixelWriter px) {
 
         for (var face : faces) {
             Color color = Color.rgb(face.get(0).getColor()[0],
@@ -23,15 +26,15 @@ public class Object3DDrawer implements Drawer {
             for (int i = 0; i < face.size() - 1; i++) {
                 int firstIndex = (int) face.get(i).getChildren().get(0);
                 int secondIndex = (int) face.get(i + 1).getChildren().get(0);
-                BrezenhamDrawer.getInstance().draw((int) vertexes[firstIndex - 1][0],
-                        (int) vertexes[firstIndex - 1][1],
-                        (int) vertexes[secondIndex - 1][0],
-                        (int) vertexes[secondIndex - 1][1], px, color);
+                BrezenhamDrawer.getInstance().draw((int) rVertexes[firstIndex - 1][0],
+                        (int) rVertexes[firstIndex - 1][1],
+                        (int) rVertexes[secondIndex - 1][0],
+                        (int) rVertexes[secondIndex - 1][1], px, color);
             }
-            BrezenhamDrawer.getInstance().draw((int) vertexes[first - 1][0],
-                    (int) vertexes[first - 1][1],
-                    (int) vertexes[last - 1][0],
-                    (int) vertexes[last - 1][1], px, color);
+            BrezenhamDrawer.getInstance().draw((int) rVertexes[first - 1][0],
+                    (int) rVertexes[first - 1][1],
+                    (int) rVertexes[last - 1][0],
+                    (int) rVertexes[last - 1][1], px, color);
         }
     }
 
