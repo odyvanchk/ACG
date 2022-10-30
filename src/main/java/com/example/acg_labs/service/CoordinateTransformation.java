@@ -27,6 +27,11 @@ public class CoordinateTransformation {
     private static double scaleZ = 1.0;
     private static final double FOV = 60;
     private static final double ASPECT = WIDTH / HEIGHT;
+    private final double[][] fromModelToWorldMatrix =
+                    {{1.0, 0.0, 0.0, 0.0},
+                    {0.0, 1.0, 0.0, -20.0},
+                    {0.0, 0.0, 1.0, -100.0},
+                    {0.0, 0.0, 0.0, 1.0}};
 
 
     private CoordinateTransformation() {
@@ -39,11 +44,6 @@ public class CoordinateTransformation {
 
     private double[][] make3Dto2DMatrix() {
         double[][] res;
-        double[][] fromModelToWorld =
-                            {{5.0, 0.0, 0.0, 0.0},
-                             {0.0, 5.0, 0.0, -20.0},
-                             {0.0, 0.0, 5.0, -100.0},
-                             {0.0, 0.0, 0.0, 5.0}};
         double[] zAxis = calculator.normalizeVector(calculator.subtractVector(eye, target));
         double[] xAxis = calculator.normalizeVector(calculator.crossProduct(up, zAxis));
         double[] yAxis = calculator.crossProduct(zAxis, xAxis);
@@ -62,7 +62,7 @@ public class CoordinateTransformation {
                 {0.0,         -HEIGHT / 2.0, 0.0, YMIN + HEIGHT / 2.0},
                 {0.0,         0.0,           1.0, 0.0},
                 {0.0,         0.0,           0.0, 1.0}};
-        res = calculator.matrixesProduct(fromWorldToCamera, fromModelToWorld);
+        res = calculator.matrixesProduct(fromWorldToCamera, fromModelToWorldMatrix);
         res = calculator.matrixesProduct(fromCameraToProjection, res);
         res = calculator.matrixesProduct(fromProjectionToViewport, res);
         return res;
@@ -70,11 +70,7 @@ public class CoordinateTransformation {
 
     public double[] fromModelToWorld(double[] vector) {
         double[] res;
-        double[][] matrix = {{5.0, 0.0, 0.0, 0.0},
-                {0.0, 5.0, 0.0, -20.0},
-                {0.0, 0.0, 5.0, -100.0},
-                {0.0, 0.0, 0.0, 5.0}};
-        res = calculator.matrixVectorProduct(matrix, vector);
+        res = calculator.matrixVectorProduct(fromModelToWorldMatrix, vector);
         return res;
     }
 

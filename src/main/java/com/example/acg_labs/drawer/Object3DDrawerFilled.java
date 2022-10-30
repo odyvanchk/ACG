@@ -20,12 +20,12 @@ public class Object3DDrawerFilled implements Drawer {
                      double[][] vertexes, double[][] rVertexes,
                      double[][] normalVertexes, double[][] normalRVertexes,
                      PixelWriter px) {
-        List<List<InfoComponent>> newFaces = faceRejection.rejectFacesFromCamera(faces, vertexes);
+        List<List<InfoComponent>> newFaces = faceRejection.rejectFacesFromCamera(faces, rVertexes);
         lighting.modelLambert(newFaces, normalRVertexes);
 
         double[][] zBuffer = new double[WIN_HEIGHT][WIN_WIDTH];//y x
         for (var line : zBuffer) {
-            Arrays.fill(line, 1000000);
+            Arrays.fill(line, 100);
         }
 
         for (var face : newFaces) {
@@ -44,14 +44,32 @@ public class Object3DDrawerFilled implements Drawer {
         int[] p2 = Arrays.stream(p2i).mapToInt(x -> (int) Math.round(x)).toArray();
         int[] p3 = Arrays.stream(p3i).mapToInt(x -> (int) Math.round(x)).toArray();
 
-        if (p2[1] < p1[1]) { //y2 < y1
-            swap(p2, p1);
+        if (p2[1] < p1[1]) {
+            int[] tmp = new int[]{p2[0], p2[1], p2[2]};
+            p2[0] = p1[0];
+            p2[1] = p1[1];
+            p2[2] = p1[2];
+            p1[0] = tmp[0];
+            p1[1] = tmp[1];
+            p1[2] = tmp[2];
         }
         if (p3[1] < p1[1]) {
-            swap(p3, p1);
+            int[] tmp = new int[]{p3[0], p3[1], p3[2]};
+            p3[0] = p1[0];
+            p3[1] = p1[1];
+            p3[2] = p1[2];
+            p1[0] = tmp[0];
+            p1[1] = tmp[1];
+            p1[2] = tmp[2];
         }
         if (p2[1] > p3[1]) {
-            swap(p2, p3);
+            int[] tmp = new int[]{p2[0], p2[1], p2[2]};
+            p2[0] = p3[0];
+            p2[1] = p3[1];
+            p2[2] = p3[2];
+            p3[0] = tmp[0];
+            p3[1] = tmp[1];
+            p3[2] = tmp[2];
         }
 
         double dx13 = 0, dx12 = 0, dx23 = 0;
@@ -87,11 +105,11 @@ public class Object3DDrawerFilled implements Drawer {
         }
 
         for (int i = p1[1]; i < p2[1]; i++) {
-            for (int j = (int) Math.round(wx1); j <= wx2; j++) {
+            for (int j = (int) Math.floor(wx1); j <= Math.ceil(wx2); j++) {
 //                double currZ = evaluateZ(j, i, p1[0], p1[1], p1i[2], p2[0], p2[1], p2i[2], p3[0], p3[1], p3i[2]);
                 double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
-                    if (currZ <= zBuffer[i][j]) {
+                    if (currZ < zBuffer[i][j]) {
                         px.setColor(j, i, color);
                         zBuffer[i][j] = currZ;
                     }
@@ -116,11 +134,11 @@ public class Object3DDrawerFilled implements Drawer {
         }
 
         for (int i = p2[1]; i <= p3[1]; i++) {
-            for (int j = (int) Math.round(wx1); j <= wx2; j++) {
+            for (int j = (int) Math.floor(wx1); j <= Math.ceil(wx2); j++) {
 //                double currZ = evaluateZ(j, i, p1[0], p1[1], p1i[2], p2[0], p2[1], p2i[2], p3[0], p3[1], p3i[2]);
                 double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
-                    if (currZ <= zBuffer[i][j]) {
+                    if (currZ < zBuffer[i][j]) {
                         px.setColor(j, i, color);
                         zBuffer[i][j] = currZ;
                     }
@@ -131,34 +149,35 @@ public class Object3DDrawerFilled implements Drawer {
         }
     }
 
-    private void swap(int[] first, int[] second) {
-        int[] tmp = new int[]{second[0], second[1]};
-
-        second[0] = first[0];
-        second[1] = first[1];
-
-        first[0] = tmp[0];
-        first[1] = tmp[1];
+    private double edgeFunction(double x1, double y1, double x2, double y2, double x3, double y3) {
+        return (x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1);
     }
 
     private double evaluateZ(int x, int y, double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
-        double z = 1000000.0;
-//        x1 *= 1000.0;
-//        x2 *= 1000.0;
-//        x3 *= 1000.0;
-//        y1 *= 1000.0;
-//        y2 *= 1000.0;
-//        y3 *= 1000.0;
-//        z1 *= 1000.0;
-//        z2 *= 1000.0;
-//        z3 *= 1000.0;
-//        if (Math.abs(((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1))) >= 1.4) {
-//        if (Math.abs((x3 - x1) / (x2 - x1) - (y3 - y1) / (y2 - y1)) >= 0.01) {
-            z = ((100 * ((double) x - x1) * 10000 * ((y2 - y1) * (z3 - z1) - (y3 - y1) * (z2 - z1)))
-                    - (100 * ((double) y - y1) * 10000 * ((x2 - x1) * (z3 - z1) - (x3 - x1) * (z2 - z1)))) /
-                    (-10000 * ((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1))) + 100 * z1;
-//        }
-        return z;
+        x1 = Math.round(x1);
+        y1 = Math.round(y1);
+        x2 = Math.round(x2);
+        y2 = Math.round(y2);
+        x3 = Math.round(x3);
+        y3 = Math.round(y3);
+        double area = edgeFunction(x1, y1, x2, y2, x3, y3);
+        double w1 = edgeFunction(x2, y2, x3, y3, x, y);
+        double w2 = edgeFunction(x3, y3, x1, y1, x, y);
+        double w3 = edgeFunction(x1, y1, x2, y2, x, y);
+        w1 /= area;
+        w2 /= area;
+        w3 /= area;
+        if (w1 >= 0.0 && w2 >= 0.0 && w3 >= 0.0) {
+//            if ((w1 * w2 * w3 * area) >= 0) {
+//                w1 /= area;
+//                w2 /= area;
+//                w3 /= area;
+
+            return (z1 * w1 + z2 * w2 + z3 * w3);
+//                return z1 + w2 * (z2 - z1) + w3 * (z3 - z1);
+        } else {
+            return 100;
+        }
     }
 
 }

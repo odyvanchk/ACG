@@ -37,15 +37,15 @@ public class FaceRejection {
                 vertexCB = calculator.subtractVector(triangle[i + 1], triangle[i]);
                 cos = calculator.findCosBetweenVectors(vertexAB, vertexCB);
             }
-            double[] normal = calculator.crossProduct(vertexCB, vertexAB);
-            double[] vector = calculator.subtractVector(triangle[i], eye);
+//            double[] normal = calculator.crossProduct(vertexAB, vertexCB);
+//            double[] vector = calculator.subtractVector(triangle[i], eye);
 //            cos = calculator.findCosBetweenVectors(normal, vector);
 //            if (cos >= 0 && cos < 1) {
 //                res.add(face);
 //            }
-            double dot = calculator.dotProduct(normal, vector);
-//            double dot = vertexAB[1] * vertexCB[0] - vertexAB[0] * vertexCB[1];
-            if (dot < 0.00) {
+//            double dot = calculator.dotProduct(normal, vector);
+            double dot = vertexAB[1] * vertexCB[0] - vertexAB[0] * vertexCB[1];
+            if (dot < 0.0) {
                 res.add(face);
             }
         }
