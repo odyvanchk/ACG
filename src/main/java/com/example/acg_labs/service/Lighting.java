@@ -21,8 +21,6 @@ public class Lighting {
         for (var face: faces) {
             double[] color = new double[3];
             for (int i = 0; i < 3; i++) {
-//                double[] vertex = vertexes[(int) face.get(i).getChildren().get(0) - 1];
-//                double[] newLight = calculator.subtractVector(light, vertex);
                 double[] normalVertex = normalVertexes[(int) face.get(i).getChildren().get(2) - 1];
                 double cos = calculator.findCosBetweenVectors(light, normalVertex);
                 cos++;

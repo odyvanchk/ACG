@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Drawer {
     void draw(List<List<InfoComponent>> faces,
-              double[][] vertexes, double[][] rVertexes,
-              double[][] normalVertexes, double[][] normalRVertexes,
+              double[][] vertexes,
+              double[][] normalVertexes,
               PixelWriter px);
 }

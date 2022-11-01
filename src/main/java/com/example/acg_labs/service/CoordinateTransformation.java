@@ -28,9 +28,9 @@ public class CoordinateTransformation {
     private static final double FOV = 60;
     private static final double ASPECT = WIDTH / HEIGHT;
     private final double[][] fromModelToWorldMatrix =
-                    {{1.0, 0.0, 0.0, 0.0},
-                    {0.0, 1.0, 0.0, -20.0},
-                    {0.0, 0.0, 1.0, -100.0},
+                    {{5.0, 0.0, 0.0, 0.0},
+                    {0.0, 5.0, 0.0, -20.0},
+                    {0.0, 0.0, 5.0, -100.0},
                     {0.0, 0.0, 0.0, 1.0}};
 
 

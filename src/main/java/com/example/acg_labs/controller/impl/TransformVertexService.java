@@ -1,7 +1,6 @@
 package com.example.acg_labs.controller.impl;
 
 import com.example.acg_labs.controller.TransformService;
-import com.example.acg_labs.model.Model3D;
 import com.example.acg_labs.service.CoordinateTransformation;
 import com.example.acg_labs.service.Lighting;
 import javafx.scene.input.KeyEvent;
@@ -40,24 +39,9 @@ public class TransformVertexService implements TransformService {
         var res = new double[vertexes.length][4];
         for (int i = 0; i < vertexes.length; i++) {
             var rotation = coordTrans.rotateCoordinate(vertexes[i]);
-//            var trans = coordTrans.translateCoordinate(rotation);
 
             res[i] = rotation;
         }
         return res;
     }
-
-    @Override
-    public double[][] changeVertexes(double[][] vertexes) {
-        var res = new double[vertexes.length][4];
-        for (int i = 0; i < vertexes.length; i++) {
-            var rotation = coordTrans.rotateCoordinate(vertexes[i]);
-            var trans = coordTrans.translateCoordinate(rotation);
-            var world = coordTrans.fromModelToWorld(trans);
-
-            res[i] = world;
-        }
-        return res;
-    }
-
 }

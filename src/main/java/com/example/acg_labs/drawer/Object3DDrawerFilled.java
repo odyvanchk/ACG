@@ -17,11 +17,11 @@ public class Object3DDrawerFilled implements Drawer {
 
     @Override
     public void draw(List<List<InfoComponent>> faces,
-                     double[][] vertexes, double[][] rVertexes,
-                     double[][] normalVertexes, double[][] normalRVertexes,
+                     double[][] vertexes,
+                     double[][] normalVertexes,
                      PixelWriter px) {
-        List<List<InfoComponent>> newFaces = faceRejection.rejectFacesFromCamera(faces, rVertexes);
-        lighting.modelLambert(newFaces, normalRVertexes);
+        List<List<InfoComponent>> newFaces = faceRejection.rejectFacesFromCamera(faces, vertexes);
+        lighting.modelLambert(newFaces, normalVertexes);
 
         double[][] zBuffer = new double[WIN_HEIGHT][WIN_WIDTH];//y x
         for (var line : zBuffer) {
@@ -33,9 +33,9 @@ public class Object3DDrawerFilled implements Drawer {
                     face.get(0).getColor()[1],
                     face.get(0).getColor()[2]);
 
-            drawFilledTriangle(rVertexes[(int) face.get(0).getChildren().get(0) - 1],
-                    rVertexes[(int) face.get(1).getChildren().get(0) - 1],
-                    rVertexes[(int) face.get(2).getChildren().get(0) - 1], color, px, zBuffer);
+            drawFilledTriangle(vertexes[(int) face.get(0).getChildren().get(0) - 1],
+                    vertexes[(int) face.get(1).getChildren().get(0) - 1],
+                    vertexes[(int) face.get(2).getChildren().get(0) - 1], color, px, zBuffer);
         }
     }
 
@@ -106,7 +106,6 @@ public class Object3DDrawerFilled implements Drawer {
 
         for (int i = p1[1]; i < p2[1]; i++) {
             for (int j = (int) Math.floor(wx1); j <= Math.ceil(wx2); j++) {
-//                double currZ = evaluateZ(j, i, p1[0], p1[1], p1i[2], p2[0], p2[1], p2i[2], p3[0], p3[1], p3i[2]);
                 double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
                     if (currZ < zBuffer[i][j]) {
@@ -135,7 +134,6 @@ public class Object3DDrawerFilled implements Drawer {
 
         for (int i = p2[1]; i <= p3[1]; i++) {
             for (int j = (int) Math.floor(wx1); j <= Math.ceil(wx2); j++) {
-//                double currZ = evaluateZ(j, i, p1[0], p1[1], p1i[2], p2[0], p2[1], p2i[2], p3[0], p3[1], p3i[2]);
                 double currZ = evaluateZ(j, i, p1i[0], p1i[1], p1i[2], p2i[0], p2i[1], p2i[2], p3i[0], p3i[1], p3i[2]);
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
                     if (currZ < zBuffer[i][j]) {
@@ -168,13 +166,7 @@ public class Object3DDrawerFilled implements Drawer {
         w2 /= area;
         w3 /= area;
         if (w1 >= 0.0 && w2 >= 0.0 && w3 >= 0.0) {
-//            if ((w1 * w2 * w3 * area) >= 0) {
-//                w1 /= area;
-//                w2 /= area;
-//                w3 /= area;
-
             return (z1 * w1 + z2 * w2 + z3 * w3);
-//                return z1 + w2 * (z2 - z1) + w3 * (z3 - z1);
         } else {
             return 100;
         }
