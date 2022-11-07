@@ -2,6 +2,7 @@ package com.example.acg_labs.drawer.impl;
 
 import com.example.acg_labs.drawer.Drawer;
 import com.example.acg_labs.entity.InfoComponent;
+import com.example.acg_labs.math.Calculation;
 import com.example.acg_labs.service.FaceRejection;
 import com.example.acg_labs.service.LightingFong;
 import javafx.scene.image.PixelWriter;
@@ -189,6 +190,7 @@ public class Object3DDrawerFilled implements Drawer {
         res[0] = normal1[0] * w[0] + normal2[0] * w[1] + normal3[0] * w[2];
         res[1] = normal1[1] * w[0] + normal2[1] * w[1] + normal3[1] * w[2];
         res[2] = normal1[2] * w[0] + normal2[2] * w[1] + normal3[2] * w[2];
+        res = Calculation.getInstance().normalizeVector(res);
         return res;
     }
 
