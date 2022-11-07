@@ -10,6 +10,4 @@ public interface TransformService {
     double[][] translateModel(double[][] vertexes, KeyEvent keyEvent);
 
     double[][] rotateModel(double[][] vertexes, double transX, double transY);
-
-    double[][] changeLight(double[][] vertexes);
 }

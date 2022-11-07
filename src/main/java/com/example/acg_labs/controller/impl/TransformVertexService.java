@@ -33,15 +33,4 @@ public class TransformVertexService implements TransformService {
         coordTrans.updateRotateCoordinate(transX, transY);
         return fromModelToView(vertexes);
     }
-
-    @Override
-    public double[][] changeLight(double[][] vertexes) {
-        var res = new double[vertexes.length][4];
-        for (int i = 0; i < vertexes.length; i++) {
-            var rotation = coordTrans.rotateCoordinate(vertexes[i]);
-
-            res[i] = rotation;
-        }
-        return res;
-    }
 }

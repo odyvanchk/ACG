@@ -27,17 +27,10 @@ public class FaceRejection {
             triangle[3] = vertexes[(int) face.get(2).getChildren().get(0) - 1];
             triangle[0] = triangle[3];
             triangle[4] = triangle[1];
-            int i = 0;
-            double cos = -1.0;
-            double[] vertexAB = new double[4];
-            double[] vertexCB = new double[4];
-            while ((cos >= 1 || cos < 0) && i < 3) {
-                i++;
-                vertexAB = calculator.subtractVector(triangle[i - 1], triangle[i]);
-                vertexCB = calculator.subtractVector(triangle[i + 1], triangle[i]);
-                cos = calculator.findCosBetweenVectors(vertexAB, vertexCB);
-            }
-            double dot = vertexAB[1] * vertexCB[0] - vertexAB[0] * vertexCB[1];
+            int i = 2;
+            double[] vertexAB = calculator.subtractVector(triangle[i + 1], triangle[i]);
+            double[] vertexCB = calculator.subtractVector(triangle[i - 1], triangle[i]);
+            double dot = vertexAB[0] * vertexCB[1] - vertexAB[1] * vertexCB[0];
             if (dot < 0.0) {
                 res.add(face);
             }

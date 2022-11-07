@@ -33,7 +33,6 @@ public class CoordinateTransformation {
                     {0.0, 0.0, 5.0, -100.0},
                     {0.0, 0.0, 0.0, 1.0}};
 
-
     private CoordinateTransformation() {
         matrix3DTo2D = make3Dto2DMatrix();
     }
