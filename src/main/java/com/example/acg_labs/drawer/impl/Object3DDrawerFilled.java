@@ -90,7 +90,7 @@ public class Object3DDrawerFilled implements Drawer {
         }
 
         for (int i = vertex1[1]; i < vertex2[1]; i++) {
-            for (int j = (int) Math.floor(wx1); j <= Math.ceil(wx2); j++) {
+            for (int j = (int) Math.floor(wx1) - 1; j <= Math.ceil(wx2) + 1; j++) {
                 w = findBarycentricCoordinates(j, i,
                         vertex1i[0], vertex1i[1],
                         vertex2i[0], vertex2i[1],
@@ -123,7 +123,7 @@ public class Object3DDrawerFilled implements Drawer {
         }
 
         for (int i = vertex2[1]; i <= vertex3[1]; i++) {
-            for (int j = (int) Math.floor(wx1); j <= Math.ceil(wx2); j++) {
+            for (int j = (int) Math.floor(wx1) - 1; j <= Math.ceil(wx2) + 1; j++) {
                 w = findBarycentricCoordinates(j, i,
                         vertex1i[0], vertex1i[1],
                         vertex2i[0], vertex2i[1],
