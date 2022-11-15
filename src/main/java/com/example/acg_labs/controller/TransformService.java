@@ -11,5 +11,7 @@ public interface TransformService {
 
     double[][] rotateModel(double[][] vertexes, double transX, double transY);
 
-    double[][] fromModeltoWorld(double[][] vertexes);
+    double[][] normalFromModeltoWorld(double[][] vertexes);
+
+    double[][] vertexFromModeltoWorld(double[][] vertexes);
 }

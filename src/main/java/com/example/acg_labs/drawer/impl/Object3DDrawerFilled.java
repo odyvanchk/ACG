@@ -19,6 +19,7 @@ public class Object3DDrawerFilled implements Drawer {
 
     @Override
     public void draw(List<List<InfoComponent>> faces,
+                     double[][] worldVertexes,
                      double[][] viewVertexes,
                      double[][] viewNormalVertexes,
                      PixelWriter px) {
@@ -30,7 +31,10 @@ public class Object3DDrawerFilled implements Drawer {
         }
 
         for (var face : newFaces) {
-            drawFilledTriangle(viewVertexes[(int) face.get(0).getChildren().get(0) - 1],
+            drawFilledTriangle(worldVertexes[(int) face.get(0).getChildren().get(0) - 1],
+                    worldVertexes[(int) face.get(1).getChildren().get(0) - 1],
+                    worldVertexes[(int) face.get(2).getChildren().get(0) - 1],
+                    viewVertexes[(int) face.get(0).getChildren().get(0) - 1],
                     viewVertexes[(int) face.get(1).getChildren().get(0) - 1],
                     viewVertexes[(int) face.get(2).getChildren().get(0) - 1],
                     viewNormalVertexes[(int) face.get(0).getChildren().get(2) - 1],
@@ -39,12 +43,13 @@ public class Object3DDrawerFilled implements Drawer {
         }
     }
 
-    public void drawFilledTriangle(double[] vertex1i, double[] vertex2i, double[] vertex3i,
+    public void drawFilledTriangle(double[] worldVertex1i, double[] worldVertex2i, double[] worldVertex3i,
+                                   double[] vertex1i, double[] vertex2i, double[] vertex3i,
                                    double[] normalVertex1i, double[] normalVertex2i, double[] normalVertex3i,
                                    PixelWriter px, double[][] zBuffer) {
-        int[] vertex1 = Arrays.stream(vertex1i).mapToInt(x -> (int) Math.round(x)).toArray();
-        int[] vertex2 = Arrays.stream(vertex2i).mapToInt(x -> (int) Math.round(x)).toArray();
-        int[] vertex3 = Arrays.stream(vertex3i).mapToInt(x -> (int) Math.round(x)).toArray();
+        int[] vertex1 = Arrays.stream(vertex1i).mapToInt(x -> (int) Math.ceil(x)).toArray();
+        int[] vertex2 = Arrays.stream(vertex2i).mapToInt(x -> (int) Math.ceil(x)).toArray();
+        int[] vertex3 = Arrays.stream(vertex3i).mapToInt(x -> (int) Math.ceil(x)).toArray();
         double[] w;
 
         if (vertex2[1] < vertex1[1]) {
@@ -90,7 +95,7 @@ public class Object3DDrawerFilled implements Drawer {
         }
 
         for (int i = vertex1[1]; i < vertex2[1]; i++) {
-            for (int j = (int) Math.floor(wx1) - 1; j <= Math.ceil(wx2) + 1; j++) {
+            for (int j = (int) Math.ceil(wx1) - 1; j <= Math.ceil(wx2) + 1; j++) {
                 w = findBarycentricCoordinates(j, i,
                         vertex1i[0], vertex1i[1],
                         vertex2i[0], vertex2i[1],
@@ -98,7 +103,9 @@ public class Object3DDrawerFilled implements Drawer {
                 double currZ = evaluateZ(w, vertex1i[2], vertex2i[2], vertex3i[2]);
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
                     if (currZ < zBuffer[i][j]) {
-                        Color color = lightingFong.getColor(evaluateNormalVertex(w, normalVertex1i, normalVertex2i, normalVertex3i));
+                        Color color = lightingFong.getColor(
+                                evaluateNormalVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
+                                evaluateNormalVertex(w, normalVertex1i, normalVertex2i, normalVertex3i));
                         px.setColor(j, i, color);
                         zBuffer[i][j] = currZ;
                     }
@@ -123,7 +130,7 @@ public class Object3DDrawerFilled implements Drawer {
         }
 
         for (int i = vertex2[1]; i <= vertex3[1]; i++) {
-            for (int j = (int) Math.floor(wx1) - 1; j <= Math.ceil(wx2) + 1; j++) {
+            for (int j = (int) Math.ceil(wx1) - 1; j <= Math.ceil(wx2) + 1; j++) {
                 w = findBarycentricCoordinates(j, i,
                         vertex1i[0], vertex1i[1],
                         vertex2i[0], vertex2i[1],
@@ -131,7 +138,9 @@ public class Object3DDrawerFilled implements Drawer {
                 double currZ = evaluateZ(w, vertex1i[2], vertex2i[2], vertex3i[2]);
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
                     if (currZ < zBuffer[i][j]) {
-                        Color color = lightingFong.getColor(evaluateNormalVertex(w, normalVertex1i, normalVertex2i, normalVertex3i));
+                        Color color = lightingFong.getColor(
+                                evaluateNormalVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
+                                evaluateNormalVertex(w, normalVertex1i, normalVertex2i, normalVertex3i));
                         px.setColor(j, i, color);
                         zBuffer[i][j] = currZ;
                     }
@@ -161,12 +170,12 @@ public class Object3DDrawerFilled implements Drawer {
                                                 double x2, double y2,
                                                 double x3, double y3) {
         double res[] = new double[]{-1.0, -1.0, -1.0};
-        x1 = Math.round(x1);
-        y1 = Math.round(y1);
-        x2 = Math.round(x2);
-        y2 = Math.round(y2);
-        x3 = Math.round(x3);
-        y3 = Math.round(y3);
+        x1 = Math.ceil(x1);
+        y1 = Math.ceil(y1);
+        x2 = Math.ceil(x2);
+        y2 = Math.ceil(y2);
+        x3 = Math.ceil(x3);
+        y3 = Math.ceil(y3);
         double area = edgeFunction(x1, y1, x2, y2, x3, y3);
         res[0] = edgeFunction(x2, y2, x3, y3, x, y);
         res[1] = edgeFunction(x3, y3, x1, y1, x, y);

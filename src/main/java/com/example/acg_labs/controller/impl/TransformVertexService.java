@@ -35,7 +35,19 @@ public class TransformVertexService implements TransformService {
     }
 
     @Override
-    public double[][] fromModeltoWorld(double[][] vertexes) {
+    public double[][] normalFromModeltoWorld(double[][] vertexes) {
+        var res = new double[vertexes.length][4];
+        for (int i = 0; i < vertexes.length; i++) {
+            var rotation = coordTrans.rotateCoordinate(vertexes[i]);
+            var world = coordTrans.fromModelToWorld(rotation);
+
+            res[i] = world;
+        }
+        return res;
+    }
+
+    @Override
+    public double[][] vertexFromModeltoWorld(double[][] vertexes) {
         var res = new double[vertexes.length][4];
         for (int i = 0; i < vertexes.length; i++) {
             var rotation = coordTrans.rotateCoordinate(vertexes[i]);
