@@ -50,6 +50,14 @@ public class Calculation {
         return res;
     }
 
+    public double[] multiplyVectorByScalar(double[] vector, double scalar) {
+        double[] res = new double[]{0.0, 0.0, 0.0, 0.0};
+        for (int i = 0; i < vector.length - 1; i++) {
+            res[i] = scalar * vector[i];
+        }
+        return res;
+    }
+
     public double[] normalizeVector(double[] vector) {
         double normal = 0.0;
         for (int i = 0; i < vector.length - 1; i++) {
@@ -66,6 +74,14 @@ public class Calculation {
         double[] res = new double[4];
         for (int i = 0; i < minuend.length - 1; i++) {
             res[i] = minuend[i] - subtrahend[i];
+        }
+        return res;
+    }
+
+    public double[] addVector(double[] vector1, double[] vector2) {
+        double[] res = new double[4];
+        for (int i = 0; i < vector1.length - 1; i++) {
+            res[i] = vector1[i] + vector2[i];
         }
         return res;
     }

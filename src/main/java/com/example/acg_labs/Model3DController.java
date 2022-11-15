@@ -30,7 +30,7 @@ public class Model3DController implements Initializable {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         double[][] resultVertexes = transformService.rotateModel(model3D.getVertexesD(),
                 oldX - mouseEvent.getSceneX(), oldY - mouseEvent.getSceneY());
-        double[][] resultNormalVertexes = transformService.fromModelToView(model3D.getNormalVertexesD());
+        double[][] resultNormalVertexes = transformService.fromModeltoWorld(model3D.getNormalVertexesD());
         oldX = mouseEvent.getSceneX();
         oldY = mouseEvent.getSceneY();
         drawer.draw(model3D.getFaces(), resultVertexes, resultNormalVertexes,
@@ -46,7 +46,7 @@ public class Model3DController implements Initializable {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         double[][] resultVertexes = transformService.translateModel(model3D.getVertexesD(), keyEvent);
-        double[][] resultNormalVertexes = transformService.fromModelToView(model3D.getNormalVertexesD());
+        double[][] resultNormalVertexes = transformService.fromModeltoWorld(model3D.getNormalVertexesD());
         drawer.draw(model3D.getFaces(),resultVertexes, resultNormalVertexes,
                 canvas.getGraphicsContext2D().getPixelWriter());
     }
@@ -55,10 +55,10 @@ public class Model3DController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             canvas.setFocusTraversable(true);
-            model3D = new Model3D("src/main/resources/models/model.obj");
+            model3D = new Model3D("src/main/resources/models/model.orig.obj");
 
             double[][] resultVertexes = transformService.fromModelToView(model3D.getVertexesD());
-            double[][] resultNormalVertexes = transformService.fromModelToView(model3D.getNormalVertexesD());
+            double[][] resultNormalVertexes = transformService.fromModeltoWorld(model3D.getNormalVertexesD());
             drawer.draw(model3D.getFaces(), resultVertexes, resultNormalVertexes,
                     canvas.getGraphicsContext2D().getPixelWriter());
         } catch (IOException e) {
