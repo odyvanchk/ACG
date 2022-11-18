@@ -46,10 +46,15 @@ public class LightingFong {
     }
 
     private void specular(double[] normal) {
-        double LN = calc.dotProduct(lightDir, normal);
-        double[] LNN = calc.multiplyVectorByScalar(normal, 2 * LN);
-        double[] R = calc.normalizeVector(calc.subtractVector(lightDir, LNN));
-        double temp = 0.5 * Math.pow(Math.max(calc.dotProduct(R, viewDir), 0.0), a);
+
+//        normal = new double[] {0, 1,0};
+//        lightDir = new double[] {1, -1,0};
+        double LN = calc.dotProduct(normal, lightDir);
+        double[] LNN =calc.multiplyVectorByScalar(normal, -2F* LN);
+     //  double[] ddLNN = calc.crossProduct(LNN, normal);
+        double[] R = calc.normalizeVector( calc.addVector(lightDir, LNN));
+
+        double temp = Math.pow(Math.max(calc.dotProduct( R, viewDir), 0.0), a);
         Ls = Color.rgb(Math.min((int) (temp * is[0] * 255 * kSpecular[0]), 255),
                 Math.min((int) (temp * is[1] * 255 * kSpecular[1]), 255),
                 Math.min((int) (temp * is[2] * 255 * kSpecular[2]), 255));
@@ -60,17 +65,20 @@ public class LightingFong {
         //view = calc.normalizeVector(view);
         //vertex = calc.normalizeVector(vertex);
         normal = calc.normalizeVector(normal);
+            //    lightDir = calc.normalizeVector(calc.subtractVector(light, vertex));
+       // viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
         lightDir = calc.normalizeVector(calc.subtractVector(vertex, light));
-        viewDir = calc.normalizeVector(calc.subtractVector(vertex, view));
-        //lightDir = calc.normalizeVector(calc.subtractVector(light, vertex));
-        //viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
+        for (int i = 0; i < light.length; i++) {
+            lightDir[i] = -lightDir[i];
+        }
+        viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
+
         ambient();
         diffuse(normal);
         specular(normal);
-        int Lred = Math.min((int) ((La.getRed() + Ld.getRed()+ Ls.getRed()) * 255), 255);
-        int Lgreen = Math.min((int) ((La.getGreen() +  Ld.getGreen() + Ls.getGreen())  * 255), 255);
-        int Lblue = Math.min((int) ((La.getBlue() + Ld.getBlue() + Ls.getBlue()) * 255), 255);
-
+        int Lred = Math.min((int) (( Ls.getRed()) * 255), 255);
+        int Lgreen = Math.min((int) (( Ls.getGreen())  * 255), 255);
+        int Lblue = Math.min((int) (( Ls.getBlue()) * 255), 255);
         return Color.rgb(Lred, Lgreen, Lblue);
     }
 }
