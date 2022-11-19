@@ -20,9 +20,9 @@ public class LightingFong {
     public static Color La;
     public static Color Ld;
     public static Color Ls;
-    private static double[] light = {30.0, 35.0, 100.0, 0.0};
-    private static double[] lightDir;
-    private static double[] view = {0.0, 0.0, 20.0, 0.0};
+    private static double[] light = {0.0, 0.0, 100.0, 0.0};
+    private static double[] lightDir = {0.0, 0.0, -100.0, 0.0};
+    private static double[] view = {0.0, 0.0, 5.0, 0.0};
     private static double[] viewDir;
 
     private LightingFong() {
@@ -39,7 +39,7 @@ public class LightingFong {
     }
 
     private void diffuse(double[] normal) {
-        double temp = 0.4 * Math.max(calc.dotProduct(normal, light), 0.0);
+        double temp = 0.7 * Math.max(calc.dotProduct(normal, light), 0.0);
         Ld = Color.rgb(Math.min((int) (temp * id[0] * 255 * kDiffuse[0]), 255),
                 Math.min((int) (temp * id[1] * 255 * kDiffuse[1]), 255),
                 Math.min((int) (temp * id[2] * 255 * kDiffuse[2]), 255));
@@ -49,12 +49,12 @@ public class LightingFong {
 
 //        normal = new double[] {0, 1,0};
 //        lightDir = new double[] {1, -1,0};
-        double LN = calc.dotProduct(normal, light);
+        double LN = calc.dotProduct(normal, lightDir);
         double[] LNN =calc.multiplyVectorByScalar(normal, -2F* LN);
      //  double[] ddLNN = calc.crossProduct(LNN, normal);
-        double[] R = calc.normalizeVector( calc.addVector(light, LNN));
+        double[] R = calc.normalizeVector( calc.addVector(lightDir, LNN));
 
-        double temp = Math.pow(Math.max(calc.dotProduct( R, viewDir), 0.0), a);
+        double temp = 0.7 * Math.pow(Math.max(calc.dotProduct( R, viewDir), 0.0), a);
         Ls = Color.rgb(Math.min((int) (temp * is[0] * 255 * kSpecular[0]), 255),
                 Math.min((int) (temp * is[1] * 255 * kSpecular[1]), 255),
                 Math.min((int) (temp * is[2] * 255 * kSpecular[2]), 255));
@@ -62,6 +62,7 @@ public class LightingFong {
 
     public Color getColor(double[] vertex, double[] normal) {
         light = calc.normalizeVector(light);
+        lightDir = calc.normalizeVector(lightDir);
 //        view = calc.normalizeVector(view);
 //        vertex = calc.normalizeVector(vertex);
         normal = calc.normalizeVector(normal);
@@ -69,7 +70,6 @@ public class LightingFong {
 //        viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
 //        lightDir = calc.normalizeVector(calc.subtractVector(vertex, light));
         viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
-
         ambient();
         diffuse(normal);
         specular(normal);
