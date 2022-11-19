@@ -21,7 +21,6 @@ public class LightingFong {
     public static Color Ld;
     public static Color Ls;
     private static double[] light = {0.0, 0.0, 100.0, 0.0};
-    private static double[] lightDir = {0.0, 0.0, -100.0, 0.0};
     private static double[] view = {0.0, 0.0, 5.0, 0.0};
     private static double[] viewDir;
 
@@ -47,12 +46,10 @@ public class LightingFong {
 
     private void specular(double[] normal) {
 
-//        normal = new double[] {0, 1,0};
-//        lightDir = new double[] {1, -1,0};
-        double LN = calc.dotProduct(normal, lightDir);
+        double[] inLight = new double[]{-light[0], -light[1], -light[2], 0.0};
+        double LN = calc.dotProduct(normal, inLight);
         double[] LNN =calc.multiplyVectorByScalar(normal, -2F* LN);
-     //  double[] ddLNN = calc.crossProduct(LNN, normal);
-        double[] R = calc.normalizeVector( calc.addVector(lightDir, LNN));
+        double[] R = calc.normalizeVector( calc.addVector(inLight, LNN));
 
         double temp = 0.7 * Math.pow(Math.max(calc.dotProduct( R, viewDir), 0.0), a);
         Ls = Color.rgb(Math.min((int) (temp * is[0] * 255 * kSpecular[0]), 255),
@@ -62,14 +59,9 @@ public class LightingFong {
 
     public Color getColor(double[] vertex, double[] normal) {
         light = calc.normalizeVector(light);
-        lightDir = calc.normalizeVector(lightDir);
-//        view = calc.normalizeVector(view);
-//        vertex = calc.normalizeVector(vertex);
         normal = calc.normalizeVector(normal);
-//        lightDir = calc.normalizeVector(calc.subtractVector(light, vertex));
-//        viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
-//        lightDir = calc.normalizeVector(calc.subtractVector(vertex, light));
         viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
+
         ambient();
         diffuse(normal);
         specular(normal);
