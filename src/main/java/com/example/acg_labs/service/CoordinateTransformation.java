@@ -9,7 +9,7 @@ public class CoordinateTransformation {
     private static final CoordinateTransformation INSTANCE = new CoordinateTransformation();
     private Calculation calculator = Calculation.getInstance();
     private static double[][] matrix3DTo2D;
-    private double[] eye = {0.0, 0.0, 1.0, 0.0};
+    private double[] eye = {0.0, 0.0, 20.0, 0.0};
     private double[] target = {0.0, 0.0, 0.0, 0.0};
     private double[] up = {0.0, 1.0, 0.0, 0.0};
     private static final double Z_NEAR = 1.0;

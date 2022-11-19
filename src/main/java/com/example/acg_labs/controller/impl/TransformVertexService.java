@@ -39,9 +39,9 @@ public class TransformVertexService implements TransformService {
         var res = new double[vertexes.length][4];
         for (int i = 0; i < vertexes.length; i++) {
             var rotation = coordTrans.rotateCoordinate(vertexes[i]);
-            var world = coordTrans.fromModelToWorld(rotation);
+            //var world = coordTrans.fromModelToWorld(rotation);
 
-            res[i] = world;
+            res[i] = rotation;
         }
         return res;
     }
