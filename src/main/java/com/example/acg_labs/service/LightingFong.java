@@ -20,7 +20,7 @@ public class LightingFong {
     public static Color La;
     public static Color Ld;
     public static Color Ls;
-    private static double[] light = {0.0, 0.0, 100.0, 0.0};
+    private static double[] light = {-1.0, -1.0, -1.0, 0.0};
     private static double[] view = {0.0, 0.0, 5.0, 0.0};
     private static double[] viewDir;
 
@@ -38,18 +38,17 @@ public class LightingFong {
     }
 
     private void diffuse(double[] normal) {
-        double temp = 0.7 * Math.max(calc.dotProduct(normal, light), 0.0);
+        double[] inLight = new double[]{-light[0], -light[1], -light[2], 0.0};
+        double temp = 0.7 * Math.max(calc.dotProduct(normal, inLight), 0.0);
         Ld = Color.rgb(Math.min((int) (temp * id[0] * 255 * kDiffuse[0]), 255),
                 Math.min((int) (temp * id[1] * 255 * kDiffuse[1]), 255),
                 Math.min((int) (temp * id[2] * 255 * kDiffuse[2]), 255));
     }
 
     private void specular(double[] normal) {
-
-        double[] inLight = new double[]{-light[0], -light[1], -light[2], 0.0};
-        double LN = calc.dotProduct(normal, inLight);
+        double LN = calc.dotProduct(normal, light);
         double[] LNN =calc.multiplyVectorByScalar(normal, -2F* LN);
-        double[] R = calc.normalizeVector( calc.addVector(inLight, LNN));
+        double[] R = calc.normalizeVector( calc.addVector(light, LNN));
 
         double temp = 0.7 * Math.pow(Math.max(calc.dotProduct( R, viewDir), 0.0), a);
         Ls = Color.rgb(Math.min((int) (temp * is[0] * 255 * kSpecular[0]), 255),
