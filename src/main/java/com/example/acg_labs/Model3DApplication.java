@@ -13,7 +13,7 @@ public class Model3DApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Model3DApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1300, 800, Color.BLACK);
+        Scene scene = new Scene(fxmlLoader.load(), 1300, 800, Color.WHITE);
         stage.setTitle("ACG");
         stage.setScene(scene);
         stage.show();

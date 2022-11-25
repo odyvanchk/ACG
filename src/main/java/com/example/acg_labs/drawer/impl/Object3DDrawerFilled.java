@@ -115,7 +115,7 @@ public class Object3DDrawerFilled implements Drawer {
                         Color color = lightingFong.getColor(
                                 evaluateNewVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
                                 evaluateNewVertex(w, normalVertex1i, normalVertex2i, normalVertex3i),
-                                evaluateNewTexture(w, currZ, vertex1i[2], vertex2i[2], vertex3i[2],
+                                evaluateNewTexture(w, worldVertex1i[2], worldVertex2i[2], worldVertex3i[2],
                                         texture1i, texture2i, texture3i),
                                 model3D);
                         px.setColor(j, i, color);
@@ -153,7 +153,7 @@ public class Object3DDrawerFilled implements Drawer {
                         Color color = lightingFong.getColor(
                                 evaluateNewVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
                                 evaluateNewVertex(w, normalVertex1i, normalVertex2i, normalVertex3i),
-                                evaluateNewTexture(w, currZ, vertex1i[2], vertex2i[2], vertex3i[2],
+                                evaluateNewTexture(w, worldVertex1i[2], worldVertex2i[2], worldVertex3i[2],
                                         texture1i, texture2i, texture3i),
                                 model3D);
                         px.setColor(j, i, color);
@@ -217,11 +217,12 @@ public class Object3DDrawerFilled implements Drawer {
         return res;
     }
 
-    private double[] evaluateNewTexture(double[] w, double currZ, double z1, double z2, double z3,
+    private double[] evaluateNewTexture(double[] w, double z1, double z2, double z3,
                                         double[] texture1, double[] texture2, double[] texture3) {
         double[] res = new double[]{0.0, 0.0, 0.0, 0.0};
-        res[0] = currZ * (texture1[0] * w[0] / z1 + texture2[0] * w[1] / z2 + texture3[0] * w[2] / z3);
-        res[1] = currZ * (texture1[1] * w[0] / z1 + texture2[1] * w[1] / z2 + texture3[1] * w[2] / z3);
+        double z = 1 / (w[0] / z1 + w[1] / z2 + w[2] / z3);
+        res[0] = z * (texture1[0] * w[0] / z1 + texture2[0] * w[1] / z2 + texture3[0] * w[2] / z3);
+        res[1] = z * (texture1[1] * w[0] / z1 + texture2[1] * w[1] / z2 + texture3[1] * w[2] / z3);
         return res;
     }
 

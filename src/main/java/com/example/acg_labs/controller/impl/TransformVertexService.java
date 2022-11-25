@@ -57,6 +57,4 @@ public class TransformVertexService implements TransformService {
         }
         return res;
     }
-
-
 }

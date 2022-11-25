@@ -27,6 +27,7 @@ public class CoordinateTransformation {
     private static double scaleZ = 1.0;
     private static final double FOV = 60;
     private static final double ASPECT = WIDTH / HEIGHT;
+    private double[][] fromWorldToCameraMatrix;
     private final double[][] fromModelToWorldMatrix =
                     {{1.0, 0.0, 0.0, 0.0},
                     {0.0, 1.0, 0.0, -20.0},
@@ -46,11 +47,11 @@ public class CoordinateTransformation {
         double[] zAxis = calculator.normalizeVector(calculator.subtractVector(eye, target));
         double[] xAxis = calculator.normalizeVector(calculator.crossProduct(up, zAxis));
         double[] yAxis = calculator.crossProduct(zAxis, xAxis);
-        double[][] fromWorldToCamera =
-               {{xAxis[0], xAxis[1], xAxis[2], -calculator.dotProduct(xAxis, eye)},
-                {yAxis[0], yAxis[1], yAxis[2], -calculator.dotProduct(yAxis, eye)},
-                {zAxis[0], zAxis[1], zAxis[2], -calculator.dotProduct(zAxis, eye)},
-                {0.0,      0.0,      0.0,       1.0}};
+        fromWorldToCameraMatrix =
+                new double[][]{{xAxis[0], xAxis[1], xAxis[2], -calculator.dotProduct(xAxis, eye)},
+                        {yAxis[0], yAxis[1], yAxis[2], -calculator.dotProduct(yAxis, eye)},
+                        {zAxis[0], zAxis[1], zAxis[2], -calculator.dotProduct(zAxis, eye)},
+                        {0.0, 0.0, 0.0, 1.0}};
         double[][] fromCameraToProjection =
                {{1 / (ASPECT * Math.tan(Math.toRadians(FOV / 2))), 0.0,      0.0,                      0.0},
                 {0.0,                 1 / Math.tan(Math.toRadians(FOV / 2)), 0.0,                      0.0},
@@ -61,7 +62,7 @@ public class CoordinateTransformation {
                 {0.0,         -HEIGHT / 2.0, 0.0, YMIN + HEIGHT / 2.0},
                 {0.0,         0.0,           1.0, 0.0},
                 {0.0,         0.0,           0.0, 1.0}};
-        res = calculator.matrixesProduct(fromWorldToCamera, fromModelToWorldMatrix);
+        res = calculator.matrixesProduct(fromWorldToCameraMatrix, fromModelToWorldMatrix);
         res = calculator.matrixesProduct(fromCameraToProjection, res);
         res = calculator.matrixesProduct(fromProjectionToViewport, res);
         return res;
@@ -70,6 +71,12 @@ public class CoordinateTransformation {
     public double[] fromModelToWorld(double[] vector) {
         double[] res;
         res = calculator.matrixVectorProduct(fromModelToWorldMatrix, vector);
+        return res;
+    }
+
+    public double[] fromWorldToCamera(double[] vector) {
+        double[] res;
+        res = calculator.matrixVectorProduct(fromWorldToCameraMatrix, vector);
         return res;
     }
 
@@ -82,7 +89,7 @@ public class CoordinateTransformation {
     }
 
     public void updateTranslateCoordinate(KeyEvent keyEvent) {
-        double translation = 0.4;
+        double translation = 1.0;
         switch (keyEvent.getCode()) {
             case UP -> {
                 distY += translation;

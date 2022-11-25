@@ -17,7 +17,7 @@ public class Model3D {
     private double[][] normalVertexesD;
     private double[][] texturesD;
     private final List<List<InfoComponent>> faces;
-    private BufferedImage diffuse;
+    private BufferedImage diffuseImage;
 
 
     public Model3D(String path, String diffusePath) throws IOException {
@@ -28,7 +28,7 @@ public class Model3D {
         normalVertexesD = VertexParser.getInstance().infoComponentToDouble(normalVertex);
         var texture = VertexParser.getInstance().parse(path, ObjParser.TEXTURE_VERTEX);
         texturesD = VertexParser.getInstance().infoComponentToDouble(texture);
-        var diffuse = ImageIO.read(new File(diffusePath));
+        diffuseImage = ImageIO.read(new File(diffusePath));
     }
 
 
@@ -48,5 +48,5 @@ public class Model3D {
         return texturesD;
     }
 
-    public BufferedImage getDiffuse() {return diffuse; }
+    public BufferedImage getDiffuseImage() {return diffuseImage; }
 }

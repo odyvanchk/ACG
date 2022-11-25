@@ -4,9 +4,12 @@ import com.example.acg_labs.math.Calculation;
 import com.example.acg_labs.model.Model3D;
 import javafx.scene.paint.Color;
 
+import java.awt.image.BufferedImage;
+
 public class LightingFong {
     private static final LightingFong INSTANCE = new LightingFong();
     private Calculation calc = Calculation.getInstance();
+    private BufferedImage diffuseImage;
 
     private static double[] ia = new double[]{0.1, 0.1, 0.1};
     private static double[] id = new double[]{1.0, 1.0, 1.0};
@@ -61,6 +64,17 @@ public class LightingFong {
         light = calc.normalizeVector(light);
         normal = calc.normalizeVector(normal);
         viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
+
+        diffuseImage = model3D.getDiffuseImage();
+        int x = (int) Math.round(texture[0] * diffuseImage.getWidth());
+        int y = (int) Math.round((1 - texture[1]) * diffuseImage.getHeight());
+        var clr = diffuseImage.getRGB(x, y);
+        kAmbient[0] = ((clr & 0x00ff0000) >> 16) / 255.0;
+        kAmbient[1] = ((clr & 0x0000ff00) >> 8) / 255.0;
+        kAmbient[2] = (clr & 0x000000ff) / 255.0;
+        kDiffuse[0] = kAmbient[0];
+        kDiffuse[1] = kAmbient[1];
+        kDiffuse[2] = kAmbient[2];
 
         ambient();
         diffuse(normal);
