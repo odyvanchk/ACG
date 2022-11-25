@@ -1,6 +1,7 @@
 package com.example.acg_labs.service;
 
 import com.example.acg_labs.math.Calculation;
+import com.example.acg_labs.model.Model3D;
 import javafx.scene.paint.Color;
 
 public class LightingFong {
@@ -56,7 +57,7 @@ public class LightingFong {
                 Math.min((int) (temp * is[2] * 255 * kSpecular[2]), 255));
     }
 
-    public Color getColor(double[] vertex, double[] normal) {
+    public Color getColor(double[] vertex, double[] normal, double[] texture, Model3D model3D) {
         light = calc.normalizeVector(light);
         normal = calc.normalizeVector(normal);
         viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));

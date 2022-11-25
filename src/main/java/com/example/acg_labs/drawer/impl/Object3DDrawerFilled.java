@@ -3,6 +3,7 @@ package com.example.acg_labs.drawer.impl;
 import com.example.acg_labs.drawer.Drawer;
 import com.example.acg_labs.entity.InfoComponent;
 import com.example.acg_labs.math.Calculation;
+import com.example.acg_labs.model.Model3D;
 import com.example.acg_labs.service.FaceRejection;
 import com.example.acg_labs.service.LightingFong;
 import javafx.scene.image.PixelWriter;
@@ -24,7 +25,7 @@ public class Object3DDrawerFilled implements Drawer {
                      double[][] viewVertexes,
                      double[][] viewNormalVertexes,
                      double[][] textures,
-                     BufferedImage diffuse,
+                     Model3D model3D,
                      PixelWriter px) {
         List<List<InfoComponent>> newFaces = faceRejection.rejectFacesFromCamera(faces, viewVertexes);
 
@@ -42,14 +43,19 @@ public class Object3DDrawerFilled implements Drawer {
                     viewVertexes[(int) face.get(2).getChildren().get(0) - 1],
                     viewNormalVertexes[(int) face.get(0).getChildren().get(2) - 1],
                     viewNormalVertexes[(int) face.get(1).getChildren().get(2) - 1],
-                    viewNormalVertexes[(int) face.get(2).getChildren().get(2) - 1], px, zBuffer);
+                    viewNormalVertexes[(int) face.get(2).getChildren().get(2) - 1],
+                    textures[(int) face.get(0).getChildren().get(1) - 1],
+                    textures[(int) face.get(1).getChildren().get(1) - 1],
+                    textures[(int) face.get(2).getChildren().get(1) - 1],
+                    model3D, px, zBuffer);
         }
     }
 
     public void drawFilledTriangle(double[] worldVertex1i, double[] worldVertex2i, double[] worldVertex3i,
                                    double[] vertex1i, double[] vertex2i, double[] vertex3i,
                                    double[] normalVertex1i, double[] normalVertex2i, double[] normalVertex3i,
-                                   PixelWriter px, double[][] zBuffer) {
+                                   double[] texture1i, double[] texture2i, double[] texture3i,
+                                   Model3D model3D, PixelWriter px, double[][] zBuffer) {
         int[] vertex1 = Arrays.stream(vertex1i).mapToInt(x -> (int) Math.ceil(x)).toArray();
         int[] vertex2 = Arrays.stream(vertex2i).mapToInt(x -> (int) Math.ceil(x)).toArray();
         int[] vertex3 = Arrays.stream(vertex3i).mapToInt(x -> (int) Math.ceil(x)).toArray();
@@ -107,8 +113,11 @@ public class Object3DDrawerFilled implements Drawer {
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
                     if (currZ < zBuffer[i][j]) {
                         Color color = lightingFong.getColor(
-                                evaluateNormalVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
-                                evaluateNormalVertex(w, normalVertex1i, normalVertex2i, normalVertex3i));
+                                evaluateNewVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
+                                evaluateNewVertex(w, normalVertex1i, normalVertex2i, normalVertex3i),
+                                evaluateNewTexture(w, currZ, vertex1i[2], vertex2i[2], vertex3i[2],
+                                        texture1i, texture2i, texture3i),
+                                model3D);
                         px.setColor(j, i, color);
                         zBuffer[i][j] = currZ;
                     }
@@ -142,8 +151,11 @@ public class Object3DDrawerFilled implements Drawer {
                 if (j >= 0 && j < WIN_WIDTH && i >= 0 && i < WIN_HEIGHT) {
                     if (currZ < zBuffer[i][j]) {
                         Color color = lightingFong.getColor(
-                                evaluateNormalVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
-                                evaluateNormalVertex(w, normalVertex1i, normalVertex2i, normalVertex3i));
+                                evaluateNewVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
+                                evaluateNewVertex(w, normalVertex1i, normalVertex2i, normalVertex3i),
+                                evaluateNewTexture(w, currZ, vertex1i[2], vertex2i[2], vertex3i[2],
+                                        texture1i, texture2i, texture3i),
+                                model3D);
                         px.setColor(j, i, color);
                         zBuffer[i][j] = currZ;
                     }
@@ -197,12 +209,19 @@ public class Object3DDrawerFilled implements Drawer {
         }
     }
 
-    private double[] evaluateNormalVertex(double[] w, double[] normal1, double[] normal2, double[] normal3) {
+    private double[] evaluateNewVertex(double[] w, double[] vertex1, double[] vertex2, double[] vertex3) {
         double[] res = new double[]{0.0, 0.0, 0.0, 0.0};
-        res[0] = normal1[0] * w[0] + normal2[0] * w[1] + normal3[0] * w[2];
-        res[1] = normal1[1] * w[0] + normal2[1] * w[1] + normal3[1] * w[2];
-        res[2] = normal1[2] * w[0] + normal2[2] * w[1] + normal3[2] * w[2];
-        res = Calculation.getInstance().normalizeVector(res);
+        res[0] = vertex1[0] * w[0] + vertex2[0] * w[1] + vertex3[0] * w[2];
+        res[1] = vertex1[1] * w[0] + vertex2[1] * w[1] + vertex3[1] * w[2];
+        res[2] = vertex1[2] * w[0] + vertex2[2] * w[1] + vertex3[2] * w[2];
+        return res;
+    }
+
+    private double[] evaluateNewTexture(double[] w, double currZ, double z1, double z2, double z3,
+                                        double[] texture1, double[] texture2, double[] texture3) {
+        double[] res = new double[]{0.0, 0.0, 0.0, 0.0};
+        res[0] = currZ * (texture1[0] * w[0] / z1 + texture2[0] * w[1] / z2 + texture3[0] * w[2] / z3);
+        res[1] = currZ * (texture1[1] * w[0] / z1 + texture2[1] * w[1] / z2 + texture3[1] * w[2] / z3);
         return res;
     }
 

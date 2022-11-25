@@ -36,7 +36,7 @@ public class Model3DController implements Initializable {
         oldY = mouseEvent.getSceneY();
         drawer.draw(model3D.getFaces(), resultWorldVertexes,
                 resultVertexes, resultNormalVertexes,
-                model3D.getTexturesD(), model3D.getDiffuse(),
+                model3D.getTexturesD(), model3D,
                 canvas.getGraphicsContext2D().getPixelWriter());
     }
 
@@ -53,7 +53,7 @@ public class Model3DController implements Initializable {
         double[][] resultNormalVertexes = transformService.normalFromModeltoWorld(model3D.getNormalVertexesD());
         drawer.draw(model3D.getFaces(), resultWorldVertexes,
                 resultVertexes, resultNormalVertexes,
-                model3D.getTexturesD(), model3D.getDiffuse(),
+                model3D.getTexturesD(), model3D,
                 canvas.getGraphicsContext2D().getPixelWriter());
     }
 
@@ -70,7 +70,7 @@ public class Model3DController implements Initializable {
             double[][] resultNormalVertexes = transformService.normalFromModeltoWorld(model3D.getNormalVertexesD());
             drawer.draw(model3D.getFaces(), resultWorldVertexes,
                     resultVertexes, resultNormalVertexes,
-                    model3D.getTexturesD(), model3D.getDiffuse(),
+                    model3D.getTexturesD(), model3D,
                     canvas.getGraphicsContext2D().getPixelWriter());
         } catch (IOException e) {
             e.printStackTrace();
