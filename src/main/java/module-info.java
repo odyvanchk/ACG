@@ -1,6 +1,7 @@
 module com.example.acg_labs {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
 
     opens com.example.acg_labs to javafx.fxml;

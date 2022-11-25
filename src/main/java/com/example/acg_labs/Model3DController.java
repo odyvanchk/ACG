@@ -34,7 +34,9 @@ public class Model3DController implements Initializable {
         double[][] resultNormalVertexes = transformService.normalFromModeltoWorld(model3D.getNormalVertexesD());
         oldX = mouseEvent.getSceneX();
         oldY = mouseEvent.getSceneY();
-        drawer.draw(model3D.getFaces(), resultWorldVertexes, resultVertexes, resultNormalVertexes,
+        drawer.draw(model3D.getFaces(), resultWorldVertexes,
+                resultVertexes, resultNormalVertexes,
+                model3D.getTexturesD(), model3D.getDiffuse(),
                 canvas.getGraphicsContext2D().getPixelWriter());
     }
 
@@ -49,7 +51,9 @@ public class Model3DController implements Initializable {
         double[][] resultVertexes = transformService.translateModel(model3D.getVertexesD(), keyEvent);
         double[][] resultWorldVertexes = transformService.vertexFromModeltoWorld(model3D.getVertexesD());
         double[][] resultNormalVertexes = transformService.normalFromModeltoWorld(model3D.getNormalVertexesD());
-        drawer.draw(model3D.getFaces(), resultWorldVertexes, resultVertexes, resultNormalVertexes,
+        drawer.draw(model3D.getFaces(), resultWorldVertexes,
+                resultVertexes, resultNormalVertexes,
+                model3D.getTexturesD(), model3D.getDiffuse(),
                 canvas.getGraphicsContext2D().getPixelWriter());
     }
 
@@ -57,12 +61,16 @@ public class Model3DController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             canvas.setFocusTraversable(true);
-            model3D = new Model3D("src/main/resources/models/model.obj");
+            model3D = new Model3D("src/main/resources/models/model2.obj",
+                    "src/main/resources/models/diffuse2.png"
+                    );
 
             double[][] resultVertexes = transformService.fromModelToView(model3D.getVertexesD());
             double[][] resultWorldVertexes = transformService.vertexFromModeltoWorld(model3D.getVertexesD());
             double[][] resultNormalVertexes = transformService.normalFromModeltoWorld(model3D.getNormalVertexesD());
-            drawer.draw(model3D.getFaces(), resultWorldVertexes, resultVertexes, resultNormalVertexes,
+            drawer.draw(model3D.getFaces(), resultWorldVertexes,
+                    resultVertexes, resultNormalVertexes,
+                    model3D.getTexturesD(), model3D.getDiffuse(),
                     canvas.getGraphicsContext2D().getPixelWriter());
         } catch (IOException e) {
             e.printStackTrace();

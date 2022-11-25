@@ -8,6 +8,7 @@ import com.example.acg_labs.service.LightingFong;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class Object3DDrawerFilled implements Drawer {
                      double[][] worldVertexes,
                      double[][] viewVertexes,
                      double[][] viewNormalVertexes,
+                     double[][] textures,
+                     BufferedImage diffuse,
                      PixelWriter px) {
         List<List<InfoComponent>> newFaces = faceRejection.rejectFacesFromCamera(faces, viewVertexes);
 
