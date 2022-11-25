@@ -18,9 +18,10 @@ public class Model3D {
     private double[][] texturesD;
     private final List<List<InfoComponent>> faces;
     private BufferedImage diffuseImage;
+    private BufferedImage specularImage;
 
 
-    public Model3D(String path, String diffusePath) throws IOException {
+    public Model3D(String path, String diffusePath, String specularPath) throws IOException {
         faces = FaceParser.getInstance().parse(path, ObjParser.FACE);
         var vertex = VertexParser.getInstance().parse(path, ObjParser.VERTEX);
         vertexesD = VertexParser.getInstance().infoComponentToDouble(vertex);
@@ -29,6 +30,7 @@ public class Model3D {
         var texture = VertexParser.getInstance().parse(path, ObjParser.TEXTURE_VERTEX);
         texturesD = VertexParser.getInstance().infoComponentToDouble(texture);
         diffuseImage = ImageIO.read(new File(diffusePath));
+        specularImage = ImageIO.read(new File(specularPath));
     }
 
 
@@ -49,4 +51,6 @@ public class Model3D {
     }
 
     public BufferedImage getDiffuseImage() {return diffuseImage; }
+
+    public BufferedImage getSpecularImage() {return specularImage; }
 }

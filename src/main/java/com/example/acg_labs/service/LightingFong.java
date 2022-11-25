@@ -10,6 +10,7 @@ public class LightingFong {
     private static final LightingFong INSTANCE = new LightingFong();
     private Calculation calc = Calculation.getInstance();
     private BufferedImage diffuseImage;
+    private BufferedImage specularImage;
 
     private static double[] ia = new double[]{0.1, 0.1, 0.1};
     private static double[] id = new double[]{1.0, 1.0, 1.0};
@@ -43,7 +44,7 @@ public class LightingFong {
 
     private void diffuse(double[] normal) {
         double[] inLight = new double[]{-light[0], -light[1], -light[2], 0.0};
-        double temp = 0.7 * Math.max(calc.dotProduct(normal, inLight), 0.0);
+        double temp = Math.max(calc.dotProduct(normal, inLight), 0.0);
         Ld = Color.rgb(Math.min((int) (temp * id[0] * 255 * kDiffuse[0]), 255),
                 Math.min((int) (temp * id[1] * 255 * kDiffuse[1]), 255),
                 Math.min((int) (temp * id[2] * 255 * kDiffuse[2]), 255));
@@ -54,7 +55,7 @@ public class LightingFong {
         double[] LNN =calc.multiplyVectorByScalar(normal, -2F* LN);
         double[] R = calc.normalizeVector( calc.addVector(light, LNN));
 
-        double temp = 0.7 * Math.pow(Math.max(calc.dotProduct( R, viewDir), 0.0), a);
+        double temp = Math.pow(Math.max(calc.dotProduct( R, viewDir), 0.0), a);
         Ls = Color.rgb(Math.min((int) (temp * is[0] * 255 * kSpecular[0]), 255),
                 Math.min((int) (temp * is[1] * 255 * kSpecular[1]), 255),
                 Math.min((int) (temp * is[2] * 255 * kSpecular[2]), 255));
@@ -66,8 +67,18 @@ public class LightingFong {
         viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
 
         diffuseImage = model3D.getDiffuseImage();
-        int x = (int) Math.round(texture[0] * diffuseImage.getWidth());
-        int y = (int) Math.round((1 - texture[1]) * diffuseImage.getHeight());
+        int x = (int) Math.round((texture[0]) * diffuseImage.getWidth());
+        int y = (int) Math.round((texture[1]) * diffuseImage.getHeight());
+        if (x >= diffuseImage.getWidth()) {
+            x -= diffuseImage.getWidth();
+        } else if (x < 0) {
+            x += diffuseImage.getWidth();
+        }
+        if (y >= diffuseImage.getHeight()) {
+            y -= diffuseImage.getHeight();
+        } else if (y < 0) {
+            y += diffuseImage.getHeight();
+        }
         var clr = diffuseImage.getRGB(x, y);
         kAmbient[0] = ((clr & 0x00ff0000) >> 16) / 255.0;
         kAmbient[1] = ((clr & 0x0000ff00) >> 8) / 255.0;
@@ -75,6 +86,12 @@ public class LightingFong {
         kDiffuse[0] = kAmbient[0];
         kDiffuse[1] = kAmbient[1];
         kDiffuse[2] = kAmbient[2];
+
+        specularImage = model3D.getSpecularImage();
+        clr = specularImage.getRGB(x, y);
+        kSpecular[0] = ((clr & 0x00ff0000) >> 16) / 255.0;
+        kSpecular[1] = ((clr & 0x0000ff00) >> 8) / 255.0;
+        kSpecular[2] = (clr & 0x000000ff) / 255.0;
 
         ambient();
         diffuse(normal);
