@@ -23,7 +23,6 @@ public class Object3DDrawerFilled implements Drawer {
     public void draw(List<List<InfoComponent>> faces,
                      double[][] worldVertexes,
                      double[][] viewVertexes,
-                     double[][] viewNormalVertexes,
                      double[][] textures,
                      Model3D model3D,
                      PixelWriter px) {
@@ -41,9 +40,6 @@ public class Object3DDrawerFilled implements Drawer {
                     viewVertexes[(int) face.get(0).getChildren().get(0) - 1],
                     viewVertexes[(int) face.get(1).getChildren().get(0) - 1],
                     viewVertexes[(int) face.get(2).getChildren().get(0) - 1],
-                    viewNormalVertexes[(int) face.get(0).getChildren().get(2) - 1],
-                    viewNormalVertexes[(int) face.get(1).getChildren().get(2) - 1],
-                    viewNormalVertexes[(int) face.get(2).getChildren().get(2) - 1],
                     textures[(int) face.get(0).getChildren().get(1) - 1],
                     textures[(int) face.get(1).getChildren().get(1) - 1],
                     textures[(int) face.get(2).getChildren().get(1) - 1],
@@ -53,7 +49,6 @@ public class Object3DDrawerFilled implements Drawer {
 
     public void drawFilledTriangle(double[] worldVertex1i, double[] worldVertex2i, double[] worldVertex3i,
                                    double[] vertex1i, double[] vertex2i, double[] vertex3i,
-                                   double[] normalVertex1i, double[] normalVertex2i, double[] normalVertex3i,
                                    double[] texture1i, double[] texture2i, double[] texture3i,
                                    Model3D model3D, PixelWriter px, double[][] zBuffer) {
         int[] vertex1 = Arrays.stream(vertex1i).mapToInt(x -> (int) Math.ceil(x)).toArray();
@@ -114,7 +109,6 @@ public class Object3DDrawerFilled implements Drawer {
                     if (currZ < zBuffer[i][j]) {
                         Color color = lightingFong.getColor(
                                 evaluateNewVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
-                                evaluateNewVertex(w, normalVertex1i, normalVertex2i, normalVertex3i),
                                 evaluateNewTexture(w, worldVertex1i[2], worldVertex2i[2], worldVertex3i[2],
                                         texture1i, texture2i, texture3i),
                                 model3D);
@@ -152,7 +146,6 @@ public class Object3DDrawerFilled implements Drawer {
                     if (currZ < zBuffer[i][j]) {
                         Color color = lightingFong.getColor(
                                 evaluateNewVertex(w, worldVertex1i, worldVertex2i, worldVertex3i),
-                                evaluateNewVertex(w, normalVertex1i, normalVertex2i, normalVertex3i),
                                 evaluateNewTexture(w, worldVertex1i[2], worldVertex2i[2], worldVertex3i[2],
                                         texture1i, texture2i, texture3i),
                                 model3D);

@@ -2,12 +2,10 @@ package com.example.acg_labs.controller.impl;
 
 import com.example.acg_labs.controller.TransformService;
 import com.example.acg_labs.service.CoordinateTransformation;
-import com.example.acg_labs.service.Lighting;
 import javafx.scene.input.KeyEvent;
 
 public class TransformVertexService implements TransformService {
     private CoordinateTransformation coordTrans = CoordinateTransformation.getInstance();
-    private Lighting lighting = Lighting.getInstance();
 
     @Override
     public double[][] fromModelToView(double[][] vertexes) {

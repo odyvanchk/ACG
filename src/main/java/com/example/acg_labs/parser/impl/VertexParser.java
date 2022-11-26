@@ -34,7 +34,9 @@ public class VertexParser implements ObjParser {
 
                     var splitLine = line.split(" ");
                     for (int i = 1; i < splitLine.length; i++) {
-                        vertex.add(new VertexComponent(Double.parseDouble(splitLine[i])));
+                        if (!splitLine[i].equals("")) {
+                            vertex.add(new VertexComponent(Double.parseDouble(splitLine[i].trim())));
+                        }
                     }
                 }
             }

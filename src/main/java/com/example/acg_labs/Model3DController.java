@@ -31,11 +31,10 @@ public class Model3DController implements Initializable {
         double[][] resultVertexes = transformService.rotateModel(model3D.getVertexesD(),
                 oldX - mouseEvent.getSceneX(), oldY - mouseEvent.getSceneY());
         double[][] resultWorldVertexes = transformService.vertexFromModeltoWorld(model3D.getVertexesD());
-        double[][] resultNormalVertexes = transformService.normalFromModeltoWorld(model3D.getNormalVertexesD());
         oldX = mouseEvent.getSceneX();
         oldY = mouseEvent.getSceneY();
         drawer.draw(model3D.getFaces(), resultWorldVertexes,
-                resultVertexes, resultNormalVertexes,
+                resultVertexes,
                 model3D.getTexturesD(), model3D,
                 canvas.getGraphicsContext2D().getPixelWriter());
     }
@@ -50,9 +49,8 @@ public class Model3DController implements Initializable {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         double[][] resultVertexes = transformService.translateModel(model3D.getVertexesD(), keyEvent);
         double[][] resultWorldVertexes = transformService.vertexFromModeltoWorld(model3D.getVertexesD());
-        double[][] resultNormalVertexes = transformService.normalFromModeltoWorld(model3D.getNormalVertexesD());
         drawer.draw(model3D.getFaces(), resultWorldVertexes,
-                resultVertexes, resultNormalVertexes,
+                resultVertexes,
                 model3D.getTexturesD(), model3D,
                 canvas.getGraphicsContext2D().getPixelWriter());
     }
@@ -61,16 +59,16 @@ public class Model3DController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             canvas.setFocusTraversable(true);
-            model3D = new Model3D("src/main/resources/models/model6.obj",
-                    "src/main/resources/models/diffuse6.jpeg",
-                    "src/main/resources/models/specular6.png"
+            model3D = new Model3D("src/main/resources/models/model.obj",
+                    "src/main/resources/models/normal.png",
+                    "src/main/resources/models/diffuse.png",
+                    "src/main/resources/models/specular.png"
                     );
 
             double[][] resultVertexes = transformService.fromModelToView(model3D.getVertexesD());
             double[][] resultWorldVertexes = transformService.vertexFromModeltoWorld(model3D.getVertexesD());
-            double[][] resultNormalVertexes = transformService.normalFromModeltoWorld(model3D.getNormalVertexesD());
             drawer.draw(model3D.getFaces(), resultWorldVertexes,
-                    resultVertexes, resultNormalVertexes,
+                    resultVertexes,
                     model3D.getTexturesD(), model3D,
                     canvas.getGraphicsContext2D().getPixelWriter());
         } catch (IOException e) {

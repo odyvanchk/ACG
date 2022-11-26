@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 public class LightingFong {
     private static final LightingFong INSTANCE = new LightingFong();
     private Calculation calc = Calculation.getInstance();
+    private BufferedImage normalImage;
     private BufferedImage diffuseImage;
     private BufferedImage specularImage;
 
@@ -61,14 +62,14 @@ public class LightingFong {
                 Math.min((int) (temp * is[2] * 255 * kSpecular[2]), 255));
     }
 
-    public Color getColor(double[] vertex, double[] normal, double[] texture, Model3D model3D) {
+    public Color getColor(double[] vertex, double[] texture, Model3D model3D) {
         light = calc.normalizeVector(light);
-        normal = calc.normalizeVector(normal);
+        double[] normal = new double[4];
         viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
 
         diffuseImage = model3D.getDiffuseImage();
         int x = (int) Math.round((texture[0]) * diffuseImage.getWidth());
-        int y = (int) Math.round((texture[1]) * diffuseImage.getHeight());
+        int y = (int) Math.round((1 - texture[1]) * diffuseImage.getHeight());
         if (x >= diffuseImage.getWidth()) {
             x -= diffuseImage.getWidth();
         } else if (x < 0) {
@@ -92,6 +93,15 @@ public class LightingFong {
         kSpecular[0] = ((clr & 0x00ff0000) >> 16) / 255.0;
         kSpecular[1] = ((clr & 0x0000ff00) >> 8) / 255.0;
         kSpecular[2] = (clr & 0x000000ff) / 255.0;
+
+        normalImage = model3D.getNormalImage();
+        clr = normalImage.getRGB(x, y);
+        normal[0] = ((clr & 0x00ff0000) >> 16) / 255.0 * 2 - 1;
+        normal[1] = ((clr & 0x0000ff00) >> 8) / 255.0 * 2 - 1;
+        normal[2] = (clr & 0x000000ff) / 255.0 * 2 - 1;
+        normal[3] = 0.0;
+        normal = calc.normalizeVector(
+                CoordinateTransformation.getInstance().rotateCoordinate(normal));
 
         ambient();
         diffuse(normal);
