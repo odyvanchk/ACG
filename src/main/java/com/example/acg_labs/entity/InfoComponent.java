@@ -9,7 +9,13 @@ public interface InfoComponent<T extends Number> {
 
     int[] getColor();
 
+    int getNumberPart();
+
+    void setNumberPart(int number);
+
     void updateColor(int[] newColor);
+
+
 
     //ComponentType getType();
 }

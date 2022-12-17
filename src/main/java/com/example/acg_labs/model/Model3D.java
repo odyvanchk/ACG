@@ -1,6 +1,7 @@
 package com.example.acg_labs.model;
 
 import com.example.acg_labs.entity.InfoComponent;
+import com.example.acg_labs.parser.MtlParser;
 import com.example.acg_labs.parser.ObjParser;
 import com.example.acg_labs.parser.impl.FaceParser;
 import com.example.acg_labs.parser.impl.VertexParser;
@@ -17,6 +18,7 @@ public class Model3D {
     private double[][] normalVertexesD;
     private double[][] texturesD;
     private final List<List<InfoComponent>> faces;
+    private final List<MtlInfo> mtlInfo;
     private BufferedImage normalImage;
     private BufferedImage diffuseImage;
     private BufferedImage specularImage;
@@ -33,6 +35,7 @@ public class Model3D {
         normalImage = ImageIO.read(new File(normalPath));
         diffuseImage = ImageIO.read(new File(diffusePath));
         specularImage = ImageIO.read(new File(specularPath));
+        mtlInfo = MtlParser.getInstance().parse("");
     }
 
 
