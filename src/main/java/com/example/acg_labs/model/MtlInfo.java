@@ -1,20 +1,26 @@
 package com.example.acg_labs.model;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class MtlInfo {
+    private Color normals;
     private Color Ka;
     private Color Kd;
     private Color Ks;
-    private int Ns;
+    private double Ns;
 
-    private String mapKa;
-    private String mapKd;
-    private String mapKs;
+    private BufferedImage mapNormals;
+    private BufferedImage mapKd;
+    private BufferedImage mapKs;
 
-    public int getNs() {
+    public double getNs() {
         return Ns;
     }
 
-    public void setNs(int ns) {
+    public void setNs(double ns) {
         Ns = ns;
     }
 
@@ -42,27 +48,27 @@ public class MtlInfo {
         Ks = ks;
     }
 
-    public String getMapKa() {
-        return mapKa;
+    public BufferedImage getMapNormals() {
+        return mapNormals;
     }
 
-    public void setMapKa(String mapKa) {
-        this.mapKa = mapKa;
+    public void setMapNormals(String mapNormals) throws IOException {
+        this.mapNormals = ImageIO.read(new File(mapNormals));
     }
 
-    public String getMapKd() {
+    public BufferedImage getMapKd() {
         return mapKd;
     }
 
-    public void setMapKd(String mapKd) {
-        this.mapKd = mapKd;
+    public void setMapKd(String mapKd) throws IOException {
+        this.mapKd = ImageIO.read(new File(mapKd));
     }
 
-    public String getMapKs() {
+    public BufferedImage getMapKs() {
         return mapKs;
     }
 
-    public void setMapKs(String mapKs) {
-        this.mapKs = mapKs;
+    public void setMapKs(String mapKs) throws IOException {
+        this.mapKs = ImageIO.read(new File(mapKs));
     }
 }

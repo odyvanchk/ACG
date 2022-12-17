@@ -2,6 +2,7 @@ package com.example.acg_labs.service;
 
 import com.example.acg_labs.math.Calculation;
 import com.example.acg_labs.model.Model3D;
+import com.example.acg_labs.model.MtlInfo;
 import javafx.scene.paint.Color;
 
 import java.awt.image.BufferedImage;
@@ -62,12 +63,14 @@ public class LightingFong {
                 Math.min((int) (temp * is[2] * 255 * kSpecular[2]), 255));
     }
 
-    public Color getColor(double[] vertex, double[] texture, Model3D model3D) {
+    public Color getColor(double[] vertex, double[] normal, double[] texture, MtlInfo mtl) {
         light = calc.normalizeVector(light);
-        double[] normal = new double[4];
+        normal = calc.normalizeVector(normal);
         viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
+        diffuseImage = mtl.getMapKd();
+        specularImage = mtl.getMapKs();
+        a = mtl.getNs();
 
-      //  diffuseImage = model3D.getDiffuseImage();
         int x = (int) Math.round((texture[0]) * diffuseImage.getWidth());
         int y = (int) Math.round((1 - texture[1]) * diffuseImage.getHeight());
         if (x >= diffuseImage.getWidth()) {
@@ -80,6 +83,7 @@ public class LightingFong {
         } else if (y < 0) {
             y += diffuseImage.getHeight();
         }
+
         var clr = diffuseImage.getRGB(x, y);
         kAmbient[0] = ((clr & 0x00ff0000) >> 16) / 255.0;
         kAmbient[1] = ((clr & 0x0000ff00) >> 8) / 255.0;
@@ -88,20 +92,10 @@ public class LightingFong {
         kDiffuse[1] = kAmbient[1];
         kDiffuse[2] = kAmbient[2];
 
-        //specularImage = model3D.getSpecularImage();
         clr = specularImage.getRGB(x, y);
         kSpecular[0] = ((clr & 0x00ff0000) >> 16) / 255.0;
         kSpecular[1] = ((clr & 0x0000ff00) >> 8) / 255.0;
         kSpecular[2] = (clr & 0x000000ff) / 255.0;
-
-       // normalImage = model3D.getNormalImage();
-        clr = normalImage.getRGB(x, y);
-        normal[0] = ((clr & 0x00ff0000) >> 16) / 255.0 * 2 - 1;
-        normal[1] = ((clr & 0x0000ff00) >> 8) / 255.0 * 2 - 1;
-        normal[2] = (clr & 0x000000ff) / 255.0 * 2 - 1;
-        normal[3] = 0.0;
-        normal = calc.normalizeVector(
-                CoordinateTransformation.getInstance().rotateCoordinate(normal));
 
         ambient();
         diffuse(normal);

@@ -29,9 +29,9 @@ public class CoordinateTransformation {
     private static final double ASPECT = WIDTH / HEIGHT;
     private double[][] fromWorldToCameraMatrix;
     private final double[][] fromModelToWorldMatrix =
-                    {{1.0, 0.0, 0.0, 0.0},
-                    {0.0, 1.0, 0.0, -20.0},
-                    {0.0, 0.0, 1.0, -100.0},
+                    {{0.25, 0.0, 0.0, 0.0},
+                    {0.0, 0.25, 0.0, -20.0},
+                    {0.0, 0.0, 0.25, -100.0},
                     {0.0, 0.0, 0.0, 1.0}};
 
     private CoordinateTransformation() {
@@ -89,7 +89,7 @@ public class CoordinateTransformation {
     }
 
     public void updateTranslateCoordinate(KeyEvent keyEvent) {
-        double translation = 1.0;
+        double translation = 5.0;
         switch (keyEvent.getCode()) {
             case UP -> {
                 distY += translation;

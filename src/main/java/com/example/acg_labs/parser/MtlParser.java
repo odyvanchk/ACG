@@ -53,10 +53,10 @@ public class MtlParser {
                     case "Kd" -> mtlInfo.setKd(getDefaultColor(tokens));
                     case "Ks" -> mtlInfo.setKs(getDefaultColor(tokens));
 
-                    case "Ns" -> mtlInfo.setNs(Integer.parseInt(tokens[1]));
+                    case "Ns" -> mtlInfo.setNs(Double.parseDouble(tokens[1]));
 
                     case "map_Kd" -> mtlInfo.setMapKd(tokens[1]);
-                    case "map_Ka" -> mtlInfo.setMapKa(tokens[1]);
+                    case "map_N" -> mtlInfo.setMapNormals(tokens[1]);
                     case "map_Ks" -> mtlInfo.setMapKs(tokens[1]);
                 }
             }

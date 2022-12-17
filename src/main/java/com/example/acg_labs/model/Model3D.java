@@ -15,6 +15,7 @@ public class Model3D {
 
     private double[][] vertexesD;
     private double[][] texturesD;
+    private double[][] normalVertexesD;
     private final List<List<InfoComponent>> faces;
     private final List<MtlInfo> mtlInfo;
 
@@ -24,11 +25,11 @@ public class Model3D {
         faces = FaceParser.getInstance().parse(path, ObjParser.FACE);
         var vertex = VertexParser.getInstance().parse(path, ObjParser.VERTEX);
         vertexesD = VertexParser.getInstance().infoComponentToDouble(vertex);
-        //var normalVertex = VertexParser.getInstance().parse(path, ObjParser.NORMAL_VECTOR);
-        //normalVertexesD = VertexParser.getInstance().infoComponentToDouble(normalVertex);
+        var normalVertex = VertexParser.getInstance().parse(path, ObjParser.NORMAL_VECTOR);
+        normalVertexesD = VertexParser.getInstance().infoComponentToDouble(normalVertex);
         var texture = VertexParser.getInstance().parse(path, ObjParser.TEXTURE_VERTEX);
-        texturesD = VertexParser.getInstance().infoComponentToDouble(texture);
         mtlInfo = MtlParser.getInstance().parse(path);
+        texturesD = VertexParser.getInstance().infoComponentToDouble(texture);
 
     }
 
@@ -45,5 +46,11 @@ public class Model3D {
         return texturesD;
     }
 
+    public List<MtlInfo> getMtlInfo() {
+        return mtlInfo;
+    }
 
+    public double[][] getNormalVertexesD() {
+        return normalVertexesD;
+    }
 }
