@@ -4,17 +4,17 @@ public class MtlInfo {
     private Color Ka;
     private Color Kd;
     private Color Ks;
-    private float Ns;
+    private int Ns;
 
     private String mapKa;
     private String mapKd;
     private String mapKs;
 
-    public float getNs() {
+    public int getNs() {
         return Ns;
     }
 
-    public void setNs(float ns) {
+    public void setNs(int ns) {
         Ns = ns;
     }
 

@@ -3,6 +3,7 @@ package com.example.acg_labs.entity.impl;
 import com.example.acg_labs.entity.InfoComponent;
 
 import java.util.List;
+import java.util.Objects;
 
 public record VertexComponent(Double element) implements InfoComponent<Double> {
 
@@ -46,7 +47,7 @@ public record VertexComponent(Double element) implements InfoComponent<Double> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VertexComponent that = (VertexComponent) o;
-        return element == that.element;
+        return Objects.equals(element, that.element);
     }
 
     @Override
