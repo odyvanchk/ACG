@@ -11,9 +11,20 @@ public class FaceComponent implements InfoComponent<Integer> {
 
     private final List<Integer> infoComponents = new ArrayList<>();
     private int[] color = {0, 0, 0};
+    private int numberPart;
 
     public int[] getColor() {
         return color;
+    }
+
+    @Override
+    public int getNumberPart() {
+        return numberPart;
+    }
+
+    @Override
+    public void setNumberPart(int number) {
+        this.numberPart = number;
     }
 
     public void updateColor(int[] newColor) {

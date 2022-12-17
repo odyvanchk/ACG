@@ -67,7 +67,7 @@ public class LightingFong {
         double[] normal = new double[4];
         viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
 
-        diffuseImage = model3D.getDiffuseImage();
+      //  diffuseImage = model3D.getDiffuseImage();
         int x = (int) Math.round((texture[0]) * diffuseImage.getWidth());
         int y = (int) Math.round((1 - texture[1]) * diffuseImage.getHeight());
         if (x >= diffuseImage.getWidth()) {
@@ -88,13 +88,13 @@ public class LightingFong {
         kDiffuse[1] = kAmbient[1];
         kDiffuse[2] = kAmbient[2];
 
-        specularImage = model3D.getSpecularImage();
+        //specularImage = model3D.getSpecularImage();
         clr = specularImage.getRGB(x, y);
         kSpecular[0] = ((clr & 0x00ff0000) >> 16) / 255.0;
         kSpecular[1] = ((clr & 0x0000ff00) >> 8) / 255.0;
         kSpecular[2] = (clr & 0x000000ff) / 255.0;
 
-        normalImage = model3D.getNormalImage();
+       // normalImage = model3D.getNormalImage();
         clr = normalImage.getRGB(x, y);
         normal[0] = ((clr & 0x00ff0000) >> 16) / 255.0 * 2 - 1;
         normal[1] = ((clr & 0x0000ff00) >> 8) / 255.0 * 2 - 1;

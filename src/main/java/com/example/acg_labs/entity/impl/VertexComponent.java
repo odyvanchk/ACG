@@ -22,6 +22,16 @@ public record VertexComponent(Double element) implements InfoComponent<Double> {
     }
 
     @Override
+    public int getNumberPart() {
+        return 0;
+    }
+
+    @Override
+    public void setNumberPart(int number) {
+
+    }
+
+    @Override
     public void updateColor(int[] newColor) {
 
     }

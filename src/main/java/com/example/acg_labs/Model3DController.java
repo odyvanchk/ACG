@@ -59,11 +59,7 @@ public class Model3DController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             canvas.setFocusTraversable(true);
-            model3D = new Model3D("src/main/resources/models/model.obj",
-                    "src/main/resources/models/normal.png",
-                    "src/main/resources/models/diffuse.png",
-                    "src/main/resources/models/specular.png"
-                    );
+            model3D = new Model3D("src/main/resources/models/RecordpLayer_vintage_solo_scene_GOBACK_TO_PREVIOUS_TEST.obj");
 
             double[][] resultVertexes = transformService.fromModelToView(model3D.getVertexesD());
             double[][] resultWorldVertexes = transformService.vertexFromModeltoWorld(model3D.getVertexesD());

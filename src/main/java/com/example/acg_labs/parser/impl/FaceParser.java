@@ -23,18 +23,22 @@ public class FaceParser implements ObjParser {
     @Override
     public List<List<InfoComponent>> parse(String path, String type) throws IOException {
         List<List<InfoComponent>> res = new ArrayList<>();
-
+        int s = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
 
             while ((line = br.readLine()) != null) {
-                if (line.startsWith(type + " ")) {
+                if (line.startsWith("s" + " ")) {
+                    s = Integer.parseInt(line.substring(2));
+                }
+                else if (line.startsWith(type + " ")) {
                     var vertex = new ArrayList<InfoComponent>();
 //                    res.add(vertex);
 
                     var splitLine = line.split(" ");
                     for (int i = 1; i < splitLine.length; i++) {
                         var vert = new FaceComponent();
+                        vert.setNumberPart(s);
                         var splitFace = splitLine[i].split("/");
                         for (String faceVertex : splitFace) {
                             vert.add(Integer.valueOf(faceVertex));
