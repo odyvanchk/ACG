@@ -67,8 +67,8 @@ public class LightingFong {
         light = calc.normalizeVector(light);
         normal = calc.normalizeVector(normal);
         viewDir = calc.normalizeVector(calc.subtractVector(view, vertex));
-        diffuseImage = mtl.getMapKd();
         specularImage = mtl.getMapKs();
+        diffuseImage = mtl.getMapKd();
         a = mtl.getNs();
 
         int x = (int) Math.round((texture[0]) * diffuseImage.getWidth());
@@ -91,6 +91,19 @@ public class LightingFong {
         kDiffuse[0] = kAmbient[0];
         kDiffuse[1] = kAmbient[1];
         kDiffuse[2] = kAmbient[2];
+
+        x = (int) Math.round((texture[0]) * specularImage.getWidth());
+        y = (int) Math.round((1 - texture[1]) * specularImage.getHeight());
+        if (x >= specularImage.getWidth()) {
+            x -= specularImage.getWidth();
+        } else if (x < 0) {
+            x += specularImage.getWidth();
+        }
+        if (y >= specularImage.getHeight()) {
+            y -= specularImage.getHeight();
+        } else if (y < 0) {
+            y += specularImage.getHeight();
+        }
 
         clr = specularImage.getRGB(x, y);
         kSpecular[0] = ((clr & 0x00ff0000) >> 16) / 255.0;
